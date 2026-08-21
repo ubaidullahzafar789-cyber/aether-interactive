@@ -1,0 +1,209 @@
+/* =============================================================
+   AETHER — Footer CSS
+   ============================================================= */
+
+.footer {
+  width: 100%;
+  padding: var(--space-20) var(--container-gutter) var(--space-8);
+  background-color: #030407;
+  color: var(--color-text-primary);
+  border-top: 1px solid var(--color-border);
+}
+
+.footer__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: var(--space-12);
+  padding-bottom: var(--space-12);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.footer__logo {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #ffffff;
+}
+
+.footer__tagline {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.footer__time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  margin-top: var(--space-2);
+}
+
+.footer__time-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+}
+
+/* Nav */
+.footer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footer__nav-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-text-tertiary);
+}
+
+.footer__nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.footer__nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+}
+
+.footer__nav-link:hover {
+  color: var(--color-text-primary);
+}
+
+/* Dispatch */
+.footer__dispatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.footer__dispatch-text {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.footer__dispatch-form {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.footer__dispatch-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-medium);
+  border-radius: 4px;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  outline: none;
+}
+
+.footer__dispatch-input:focus {
+  border-color: var(--color-accent);
+}
+
+.footer__dispatch-btn {
+  padding: 8px 14px;
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-primary);
+  transition: background 0.2s ease;
+}
+
+.footer__dispatch-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.footer__dispatch-success {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #78d8d0;
+  padding: 8px;
+  border: 1px dashed #78d8d0;
+  border-radius: 4px;
+}
+
+.footer__sound-toggle {
+  margin-top: var(--space-2);
+}
+
+.footer__sound-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  transition: all 0.2s ease;
+}
+
+.footer__sound-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.footer__sound-btn--muted {
+  color: var(--color-text-tertiary);
+}
+
+/* Bottom */
+.footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.footer__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footer__copyright {
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .footer__top {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}

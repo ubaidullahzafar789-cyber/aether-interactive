@@ -1,0 +1,305 @@
+/* =============================================================
+   AETHER — Telemetry CSS
+   ============================================================= */
+
+.telemetry {
+  position: relative;
+  width: 100%;
+  padding: var(--space-32) var(--container-gutter);
+  background-color: var(--color-void);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.telemetry__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+/* Header */
+.telemetry__header {
+  margin-bottom: var(--space-12);
+}
+
+.telemetry__index {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-6);
+}
+
+.telemetry__index-num {
+  font-weight: 600;
+}
+
+.telemetry__index-rule {
+  width: 32px;
+  height: 1px;
+  background-color: var(--color-border-strong);
+}
+
+.telemetry__index-label {
+  text-transform: uppercase;
+}
+
+.telemetry__title-wrapper {
+  max-width: 840px;
+}
+
+.telemetry__title {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: var(--space-4);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.telemetry__subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Mode Buttons Bar */
+.telemetry__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-10);
+}
+
+.telemetry__mode-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  transition: all var(--dur-fast) var(--ease-out-expo);
+}
+
+.telemetry__mode-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-medium);
+  color: var(--color-text-primary);
+}
+
+.telemetry__mode-btn--active {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--mode-color);
+  color: var(--color-text-primary);
+  box-shadow: 0 0 16px rgba(184, 200, 232, 0.1);
+}
+
+.telemetry__mode-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* Nodes Grid */
+.telemetry__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  margin-bottom: var(--space-10);
+}
+
+.telemetry__card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  transition: border-color var(--dur-base) var(--ease-out-expo);
+}
+
+.telemetry__card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.telemetry__card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.telemetry__node-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.telemetry__node-name {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--color-text-primary);
+}
+
+.telemetry__node-loc {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.telemetry__node-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  letter-spacing: 0.1em;
+}
+
+/* Spectrum Analyzer Bars */
+.telemetry__spectrum {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: var(--space-4);
+}
+
+.telemetry__spectrum-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-3);
+}
+
+.telemetry__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 60px;
+}
+
+.telemetry__bar-wrapper {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 2px;
+}
+
+.telemetry__bar {
+  width: 100%;
+  border-radius: 2px;
+  transition: height 0.3s ease, background-color 0.3s ease;
+}
+
+/* Stats */
+.telemetry__stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+}
+
+.telemetry__stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.telemetry__stat-key {
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  width: 90px;
+}
+
+.telemetry__progress-bg {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.telemetry__progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.telemetry__stat-val {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  width: 54px;
+  text-align: right;
+}
+
+.telemetry__stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--color-border);
+}
+
+.telemetry__stat-row > div {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Footer Banner */
+.telemetry__banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-medium);
+  border-radius: 8px;
+  padding: var(--space-4) var(--space-6);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  gap: var(--space-4);
+}
+
+.telemetry__banner-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.telemetry__banner-key {
+  color: var(--color-text-tertiary);
+}
+
+.telemetry__banner-val {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .telemetry__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .telemetry {
+    padding: var(--space-20) var(--container-gutter);
+  }
+  .telemetry__banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

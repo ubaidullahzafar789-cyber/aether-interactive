@@ -1,0 +1,228 @@
+/* =============================================================
+   Navbar
+   ============================================================= */
+
+/* ── Shell ── */
+.navbar {
+  position:   fixed;
+  top:        0;
+  left:       0;
+  right:      0;
+  z-index:    100;
+  height:     var(--nav-height);
+  transition:
+    background-color var(--dur-base) var(--ease-smooth),
+    border-color     var(--dur-base) var(--ease-smooth),
+    backdrop-filter  var(--dur-base) var(--ease-smooth);
+}
+
+.navbar--scrolled {
+  background-color: rgba(8, 10, 18, 0.82);
+  backdrop-filter:  blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Inner layout ── */
+.navbar__inner {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  height:          100%;
+  padding:         0 var(--container-gutter);
+  max-width:       var(--container-max);
+  margin:          0 auto;
+  gap:             var(--space-8);
+}
+
+/* ── Logo ── */
+.navbar__logo {
+  font-family:    var(--font-heading);
+  font-weight:    800;
+  font-size:      1rem;
+  letter-spacing: 0.22em;
+  color:          var(--color-text-primary);
+  flex-shrink:    0;
+  transition:     opacity var(--dur-fast) var(--ease-smooth);
+}
+
+.navbar__logo:hover { opacity: 0.65; }
+
+/* ── Desktop nav ── */
+.navbar__nav {
+  flex:            1;
+  display:         flex;
+  justify-content: center;
+}
+
+.navbar__links {
+  display:     flex;
+  align-items: center;
+  gap:         clamp(14px, 2vw, 36px);
+  list-style:  none;
+}
+
+.navbar__link {
+  font-family:    var(--font-body);
+  font-size:      0.6875rem;   /* 11px */
+  font-weight:    500;
+  letter-spacing: 0.16em;
+  color:          var(--color-text-secondary);
+  position:       relative;
+  transition:     color var(--dur-fast) var(--ease-smooth);
+}
+
+.navbar__link:focus-visible {
+  outline:        1px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* Underline reveal */
+.navbar__link::after {
+  content:          '';
+  position:         absolute;
+  bottom:           -4px;
+  left:             0;
+  right:            0;
+  height:           1px;
+  background:       var(--color-accent);
+  transform:        scaleX(0);
+  transform-origin: left;
+  transition:       transform var(--dur-base) var(--ease-out-expo);
+}
+
+.navbar__link:hover {
+  color: var(--color-text-primary);
+}
+
+.navbar__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Actions ── */
+.navbar__actions {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-4);
+  flex-shrink: 0;
+}
+
+/* ── Hamburger ── */
+.navbar__hamburger {
+  display:         none;
+  flex-direction:  column;
+  justify-content: center;
+  align-items:     flex-end;
+  gap:             6px;
+  width:           36px;
+  height:          36px;
+  padding:         6px;
+  border-radius:   2px;
+  transition:      opacity var(--dur-fast) var(--ease-smooth);
+}
+
+.navbar__hamburger:hover   { opacity: 0.7; }
+.navbar__hamburger:focus-visible {
+  outline:        1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.navbar__bar {
+  display:    block;
+  height:     1px;
+  background: var(--color-text-primary);
+  transition:
+    width     var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-base) var(--ease-out-expo),
+    opacity   var(--dur-fast) var(--ease-smooth);
+}
+
+.navbar__bar:nth-child(1) { width: 22px; }
+.navbar__bar:nth-child(2) { width: 14px; }
+
+/* Bars → X when open */
+.navbar--open .navbar__bar:nth-child(1) {
+  width:     22px;
+  transform: translateY(3.5px) rotate(45deg);
+}
+.navbar--open .navbar__bar:nth-child(2) {
+  width:     22px;
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+/* ── Mobile nav overlay ──
+   Display is always flex on mobile — visibility + opacity
+   control the shown/hidden state so we can animate. ── */
+.navbar__mobile {
+  display:         none;
+  position:        fixed;
+  top:             var(--nav-height);
+  left:            0;
+  right:           0;
+  bottom:          0;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-10);
+  padding:         var(--space-12);
+  background:      var(--color-bg);
+  border-top:      1px solid var(--color-border);
+  /* Hidden state */
+  opacity:         0;
+  visibility:      hidden;
+  pointer-events:  none;
+  transform:       translateY(-12px);
+  transition:
+    opacity     var(--dur-base) var(--ease-smooth),
+    transform   var(--dur-base) var(--ease-out-expo),
+    visibility  var(--dur-base);
+}
+
+/* Shown state */
+.navbar--open .navbar__mobile {
+  opacity:        1;
+  visibility:     visible;
+  pointer-events: auto;
+  transform:      translateY(0);
+}
+
+.navbar__mobile-links {
+  list-style:     none;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            var(--space-5);
+}
+
+.navbar__mobile-link {
+  font-family:    var(--font-heading);
+  font-size:      clamp(1.75rem, 7vw, 2.5rem);
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  color:          var(--color-text-secondary);
+  transition:     color var(--dur-fast) var(--ease-smooth);
+}
+
+.navbar__mobile-link:hover {
+  color: var(--color-text-primary);
+}
+
+.navbar__mobile-cta {
+  margin-top: var(--space-4);
+}
+
+/* ── Responsive breakpoints ── */
+@media (max-width: 768px) {
+  .navbar__nav,
+  .navbar__cta {
+    display: none;
+  }
+
+  .navbar__hamburger {
+    display: flex;
+  }
+
+  .navbar__mobile {
+    display: flex;
+  }
+}

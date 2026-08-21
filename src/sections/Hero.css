@@ -1,0 +1,185 @@
+/* =============================================================
+   Hero Section
+   ============================================================= */
+
+.hero {
+  position:        relative;
+  width:           100%;
+  min-height:      100svh;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  /* overflow: hidden removed to allow GSAP ScrollTrigger pin-spacer calculation */
+  padding:
+    calc(var(--nav-height) + var(--space-8))
+    var(--container-gutter)
+    var(--space-16);
+}
+
+/* ─── Content ─── */
+
+.hero__content {
+  position:       relative;
+  z-index:        1;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  text-align:     center;
+  gap:            var(--space-6);
+  pointer-events: none; /* Let scroll pass through to page */
+}
+
+.hero__content * {
+  pointer-events: auto; /* Enable text selection & interactive elements */
+}
+
+/* Eyebrow rule + label */
+.hero__eyebrow {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-4);
+}
+
+.hero__eyebrow-rule {
+  display:    block;
+  width:      24px;
+  height:     1px;
+  background: var(--color-border-medium);
+}
+
+.hero__eyebrow-label {
+  font-family:    var(--font-body);
+  font-size:      0.5625rem;
+  font-weight:    500;
+  letter-spacing: 0.28em;
+  color:          #a4b6db;
+  text-transform: uppercase;
+}
+
+/* Heading + wordmark */
+.hero__heading {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            var(--space-4);
+}
+
+/* Reduced wordmark scale so 3D Core becomes a primary visual element (55-65% width) */
+.hero__wordmark {
+  display:        block;
+  font-family:    var(--font-heading);
+  font-size:      clamp(2.5rem, 7.5vw, 6.25rem);
+  font-weight:    800;
+  letter-spacing: 0.20em;
+  color:          var(--color-text-primary);
+  line-height:    1;
+  text-shadow:
+    0 0  40px rgba(184, 200, 232, 0.14),
+    0 0 100px rgba(184, 200, 232, 0.07);
+  transform-origin: center center;
+}
+
+/* Subtitle: boosted color contrast & crisp letter-spacing for high legibility */
+.hero__subtitle {
+  display:        block;
+  font-family:    var(--font-heading);
+  font-size:      clamp(0.6875rem, 1.5vw, 1.125rem);
+  font-weight:    500;
+  letter-spacing: 0.26em;
+  color:          #c4d0e6;
+  line-height:    1.6;
+  text-transform: uppercase;
+}
+
+/* Descriptor */
+.hero__descriptor {
+  font-family:    var(--font-body);
+  font-size:      clamp(0.75rem, 1.1vw, 0.875rem);
+  font-weight:    300;
+  letter-spacing: 0.04em;
+  color:          #888ea6;
+  line-height:    1.8;
+  max-width:      360px;
+}
+
+/* ─── Scroll Indicator ─── */
+
+.hero__scroll {
+  position:  absolute;
+  bottom:    var(--space-8);
+  left:      50%;
+  transform: translateX(-50%);
+  display:   flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:       var(--space-2);
+  z-index:   1;
+  animation: scroll-float 3.2s ease-in-out infinite;
+}
+
+.hero__scroll-line {
+  position:      relative;
+  width:         1px;
+  height:        44px;
+  overflow:      hidden;
+  background:    linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-border-medium) 20%,
+    var(--color-border-medium) 80%,
+    transparent
+  );
+}
+
+/* Traveling light */
+.hero__scroll-line::after {
+  content:   '';
+  position:  absolute;
+  top:       -100%;
+  left:      0;
+  width:     100%;
+  height:    100%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-accent)
+  );
+  animation: scroll-travel 2.2s ease-in-out infinite;
+}
+
+.hero__scroll-label {
+  font-family:    var(--font-body);
+  font-size:      0.4375rem;  /* 7px */
+  font-weight:    500;
+  letter-spacing: 0.28em;
+  color:          var(--color-text-tertiary);
+}
+
+@keyframes scroll-float {
+  0%, 100% { transform: translateX(-50%) translateY(0);  }
+  50%       { transform: translateX(-50%) translateY(7px); }
+}
+
+@keyframes scroll-travel {
+  0%   { top: -100%; }
+  100% { top:  100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__scroll          { animation: none; }
+  .hero__scroll-line::after { animation: none; top: 0; }
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 768px) {
+  .hero__wordmark { letter-spacing: 0.14em; }
+  .hero__subtitle { letter-spacing: 0.20em; }
+}
+
+@media (max-width: 480px) {
+  .hero__wordmark   { font-size: clamp(2rem, 9.5vw, 3.25rem); letter-spacing: 0.12em; }
+  .hero__subtitle   { letter-spacing: 0.16em; font-size: 0.6875rem; }
+  .hero__descriptor { font-size: 0.75rem; max-width: 280px; }
+}

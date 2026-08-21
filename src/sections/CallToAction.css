@@ -1,0 +1,102 @@
+/* =============================================================
+   AETHER — CallToAction CSS
+   ============================================================= */
+
+.cta-section {
+  position: relative;
+  width: 100%;
+  padding: var(--space-32) var(--container-gutter);
+  background-color: var(--color-bg);
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cta-section__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-section__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(184, 200, 232, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-section__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-section__index {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-6);
+}
+
+.cta-section__index-num {
+  font-weight: 600;
+}
+
+.cta-section__index-rule {
+  width: 32px;
+  height: 1px;
+  background-color: var(--color-border-strong);
+}
+
+.cta-section__title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: var(--space-4);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.75) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cta-section__desc {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-8);
+}
+
+.cta-section__actions {
+  margin-bottom: var(--space-8);
+}
+
+.cta-section__footer-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.08em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .cta-section {
+    padding: var(--space-20) var(--container-gutter);
+  }
+}

@@ -1,0 +1,10 @@
+/* =============================================================
+   PageContainer
+   ============================================================= */
+
+.page-container {
+  width:      100%;
+  min-height: 100svh;
+  background-color: var(--color-bg);
+  position:   relative;
+}

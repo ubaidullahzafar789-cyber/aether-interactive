@@ -1,0 +1,102 @@
+/* =============================================================
+   Loader
+   ============================================================= */
+
+.loader {
+  position:       fixed;
+  inset:          0;
+  z-index:        9999;
+  background:     var(--color-void);
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  /* Hidden by default — phase class drives opacity */
+  opacity:        0;
+  pointer-events: all;
+  transition:     opacity var(--dur-slow) var(--ease-smooth);
+}
+
+.loader--entering { opacity: 0; }
+.loader--visible  { opacity: 1; }
+.loader--exiting  {
+  opacity:             0;
+  transition-duration: var(--dur-slower);
+  /* Prevent interaction during fade-out */
+  pointer-events:      none;
+}
+
+/* ── Inner content ── */
+.loader__inner {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            var(--space-3);
+  text-align:     center;
+}
+
+.loader__eyebrow {
+  font-family:    var(--font-body);
+  font-size:      0.5625rem;   /* 9px */
+  font-weight:    500;
+  letter-spacing: 0.28em;
+  color:          var(--color-text-tertiary);
+  text-transform: uppercase;
+  margin-bottom:  var(--space-2);
+}
+
+.loader__wordmark {
+  display:        block;
+  font-family:    var(--font-heading);
+  font-size:      clamp(3rem, 11vw, 7.5rem);
+  font-weight:    800;
+  letter-spacing: 0.16em;
+  color:          var(--color-text-primary);
+  line-height:    1;
+  /* Subtle luminous presence */
+  text-shadow:
+    0 0 80px  rgba(184, 200, 232, 0.15),
+    0 0 200px rgba(184, 200, 232, 0.07);
+}
+
+.loader__tagline {
+  font-family:    var(--font-body);
+  font-size:      0.5rem;      /* 8px */
+  font-weight:    400;
+  letter-spacing: 0.32em;
+  color:          var(--color-text-tertiary);
+  text-transform: uppercase;
+  margin-top:     var(--space-1);
+}
+
+/* ── Progress track ── */
+.loader__progress {
+  margin-top: var(--space-10);
+  width:      140px;
+  height:     1px;
+  background: var(--color-border);
+  overflow:   hidden;
+}
+
+.loader__bar {
+  height:     100%;
+  width:      0%;
+  background: linear-gradient(
+    90deg,
+    var(--color-text-tertiary),
+    var(--color-accent)
+  );
+  /* Bar runs for ~1.9s, matching the visible phase duration */
+  animation: loader-fill 1.9s var(--ease-out-expo) 0.6s forwards;
+}
+
+@keyframes loader-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader__bar {
+    animation: none;
+    width:     100%;
+  }
+}
