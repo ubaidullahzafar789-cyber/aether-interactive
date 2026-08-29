@@ -44,11 +44,19 @@ function SceneContent({ isMobile, isTablet, isReducedMotion, scrollStateRef }) {
     return 1.12
   }, [isMobile, isTablet])
 
-  // Smooth scroll-driven camera Z-approach
+  // Scrubbed scroll-driven camera Z-approach.
+  // Lerp factor 0.065: low enough to feel physical and cinematic,
+  // high enough to stay tightly in sync with GSAP scrub.
+  // Reduced-motion: snap camera to rest without lerp trail.
   useFrame((state) => {
     if (!scrollStateRef?.current) return
     const targetZ = scrollStateRef.current.cameraZ ?? 8.5
-    state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.1)
+    const lerpFactor = isReducedMotion ? 1.0 : 0.065
+    state.camera.position.z = THREE.MathUtils.lerp(
+      state.camera.position.z,
+      targetZ,
+      lerpFactor
+    )
   })
 
   return (

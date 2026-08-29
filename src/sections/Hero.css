@@ -1,6 +1,8 @@
 /* =============================================================
-   Hero Section
+   AETHER — Hero Section
    ============================================================= */
+
+/* ─── Shell ─── */
 
 .hero {
   position:        relative;
@@ -10,11 +12,30 @@
   flex-direction:  column;
   align-items:     center;
   justify-content: center;
-  /* overflow: hidden removed to allow GSAP ScrollTrigger pin-spacer calculation */
+  /* NOTE: overflow:hidden is intentionally omitted.
+     GSAP pin-spacer needs to measure the full height. */
   padding:
     calc(var(--nav-height) + var(--space-8))
     var(--container-gutter)
     var(--space-16);
+}
+
+/* ─── Radial Vignette Overlay ───
+   Provides cinematic depth: darkens edges so the Core visually
+   "breathes" toward the viewer. Pure CSS — no JS needed.
+   z-index sits above the 3D canvas but below text (z-index: 1). */
+.hero::before {
+  content:  '';
+  position: absolute;
+  inset:    0;
+  z-index:  0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 75% 65% at 50% 52%,
+    transparent               30%,
+    rgba(8, 10, 18, 0.35)     65%,
+    rgba(8, 10, 18, 0.72)    100%
+  );
 }
 
 /* ─── Content ─── */
@@ -27,14 +48,23 @@
   align-items:    center;
   text-align:     center;
   gap:            var(--space-6);
-  pointer-events: none; /* Let scroll pass through to page */
+  pointer-events: none; /* let scroll pass through to page */
 }
 
 .hero__content * {
-  pointer-events: auto; /* Enable text selection & interactive elements */
+  pointer-events: auto; /* text selection & interactive elements */
 }
 
-/* Eyebrow rule + label */
+/* ─── GPU compositing hints for elements GSAP will animate ─── */
+.hero__eyebrow,
+.hero__wordmark,
+.hero__subtitle,
+.hero__descriptor,
+.hero__scroll {
+  will-change: opacity, transform;
+}
+
+/* ─── Eyebrow ─── */
 .hero__eyebrow {
   display:     flex;
   align-items: center;
@@ -57,7 +87,7 @@
   text-transform: uppercase;
 }
 
-/* Heading + wordmark */
+/* ─── Heading + wordmark ─── */
 .hero__heading {
   display:        flex;
   flex-direction: column;
@@ -65,22 +95,22 @@
   gap:            var(--space-4);
 }
 
-/* Reduced wordmark scale so 3D Core becomes a primary visual element (55-65% width) */
+/* Wordmark: balanced scale so the 3D Core remains the hero (55-65% width) */
 .hero__wordmark {
-  display:        block;
-  font-family:    var(--font-heading);
-  font-size:      clamp(2.5rem, 7.5vw, 6.25rem);
-  font-weight:    800;
-  letter-spacing: 0.20em;
-  color:          var(--color-text-primary);
-  line-height:    1;
+  display:          block;
+  font-family:      var(--font-heading);
+  font-size:        clamp(2.5rem, 7.5vw, 6.25rem);
+  font-weight:      800;
+  letter-spacing:   0.20em;
+  color:            var(--color-text-primary);
+  line-height:      1;
   text-shadow:
     0 0  40px rgba(184, 200, 232, 0.14),
     0 0 100px rgba(184, 200, 232, 0.07);
   transform-origin: center center;
 }
 
-/* Subtitle: boosted color contrast & crisp letter-spacing for high legibility */
+/* Subtitle: high-legibility tracking */
 .hero__subtitle {
   display:        block;
   font-family:    var(--font-heading);
@@ -106,24 +136,24 @@
 /* ─── Scroll Indicator ─── */
 
 .hero__scroll {
-  position:  absolute;
-  bottom:    var(--space-8);
-  left:      50%;
-  transform: translateX(-50%);
-  display:   flex;
+  position:       absolute;
+  bottom:         var(--space-8);
+  left:           50%;
+  transform:      translateX(-50%);
+  display:        flex;
   flex-direction: column;
   align-items:    center;
-  gap:       var(--space-2);
-  z-index:   1;
-  animation: scroll-float 3.2s ease-in-out infinite;
+  gap:            var(--space-2);
+  z-index:        1;
+  animation:      scroll-float 3.2s ease-in-out infinite;
 }
 
 .hero__scroll-line {
-  position:      relative;
-  width:         1px;
-  height:        44px;
-  overflow:      hidden;
-  background:    linear-gradient(
+  position:   relative;
+  width:      1px;
+  height:     44px;
+  overflow:   hidden;
+  background: linear-gradient(
     to bottom,
     transparent,
     var(--color-border-medium) 20%,
@@ -150,14 +180,16 @@
 
 .hero__scroll-label {
   font-family:    var(--font-body);
-  font-size:      0.4375rem;  /* 7px */
+  font-size:      0.4375rem;   /* 7px */
   font-weight:    500;
   letter-spacing: 0.28em;
   color:          var(--color-text-tertiary);
 }
 
+/* ─── Keyframes ─── */
+
 @keyframes scroll-float {
-  0%, 100% { transform: translateX(-50%) translateY(0);  }
+  0%, 100% { transform: translateX(-50%) translateY(0);   }
   50%       { transform: translateX(-50%) translateY(7px); }
 }
 
@@ -166,9 +198,20 @@
   100% { top:  100%; }
 }
 
+/* ─── Reduced Motion ─── */
+
 @media (prefers-reduced-motion: reduce) {
-  .hero__scroll          { animation: none; }
-  .hero__scroll-line::after { animation: none; top: 0; }
+  .hero__scroll              { animation: none; }
+  .hero__scroll-line::after  { animation: none; top: 0; }
+
+  /* Remove compositing hint when motion is off — not needed */
+  .hero__eyebrow,
+  .hero__wordmark,
+  .hero__subtitle,
+  .hero__descriptor,
+  .hero__scroll {
+    will-change: auto;
+  }
 }
 
 /* ─── Responsive ─── */
