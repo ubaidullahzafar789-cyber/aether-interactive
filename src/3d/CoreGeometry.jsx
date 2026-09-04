@@ -4,15 +4,21 @@
    - Outer shell: Translucent, reflective, dark metallic sphere
    - Inner core: Faceted Icosahedron lattice with cool emissive glow
    Responds to scrollStateRef for scroll-driven animations.
+
+   Phase 4B additions:
+   - shellOpacity drives outer sphere transparency (0.75 → 0.08 ghost)
+   - dissolution fades the inner icosahedron (1.0 → 0.08)
+   - wireframe lattice opacity inverts: more visible as shell dissolves
    ============================================================= */
 
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 export default function CoreGeometry({ isMobile = false, isReducedMotion = false, scrollStateRef }) {
-  const groupRef = useRef(null)
-  const outerMeshRef = useRef(null)
-  const innerMeshRef = useRef(null)
+  const groupRef       = useRef(null)
+  const outerMeshRef   = useRef(null)
+  const innerMeshRef   = useRef(null)
+  const wireframeRef   = useRef(null)   // Phase 4B: lattice exposure
 
   // Subdivisions based on mobile state for performance optimization
   const sphereDetail = isMobile ? 32 : 64
@@ -22,13 +28,15 @@ export default function CoreGeometry({ isMobile = false, isReducedMotion = false
     if (!groupRef.current) return
 
     const scrollState = scrollStateRef?.current || {
-      coreScale: 1.0,
-      rotationSpeed: 1.0,
+      coreScale:         1.0,
+      rotationSpeed:     1.0,
       emissiveIntensity: 0.25,
+      dissolution:       0.0,
+      shellOpacity:      0.75,
     }
 
     if (!isReducedMotion) {
-      const time = state.clock.getElapsedTime()
+      const time      = state.clock.getElapsedTime()
       const speedMult = scrollState.rotationSpeed || 1.0
 
       // Continuous dual rotation accelerated by scroll
@@ -48,13 +56,33 @@ export default function CoreGeometry({ isMobile = false, isReducedMotion = false
     }
 
     // Scroll-driven scale expansion
-    const currentScale = (scrollState.coreScale || 1.0)
+    const currentScale = scrollState.coreScale || 1.0
     groupRef.current.scale.setScalar(currentScale)
 
     // Scroll-driven emissive awakening
     if (innerMeshRef.current?.material) {
       innerMeshRef.current.material.emissiveIntensity =
         scrollState.emissiveIntensity ?? 0.25
+    }
+
+    // ── Phase 4B: Dissolution material mutations ──────────────
+    const dissolution  = scrollState.dissolution  ?? 0.0
+    const shellOpacity = scrollState.shellOpacity ?? 0.75
+
+    // Outer shell: opacity controlled by scrollState.shellOpacity (0.75 → 0.08)
+    if (outerMeshRef.current?.material) {
+      outerMeshRef.current.material.opacity = shellOpacity
+    }
+
+    // Wireframe lattice: inversely exposes as shell dissolves (0.08 → 0.26)
+    // The structural skeleton becomes visible as the surface thins.
+    if (wireframeRef.current?.material) {
+      wireframeRef.current.material.opacity = 0.08 + dissolution * 0.18
+    }
+
+    // Inner icosahedron: fades toward 8% ghost as dissolution peaks
+    if (innerMeshRef.current?.material) {
+      innerMeshRef.current.material.opacity = 1.0 - dissolution * 0.92
     }
   })
 
@@ -79,7 +107,8 @@ export default function CoreGeometry({ isMobile = false, isReducedMotion = false
       </mesh>
 
       {/* ── Outer Subtle Wireframe Lattice Overlay ── */}
-      <mesh>
+      {/* Phase 4B: ref added so useFrame can raise opacity during dissolution */}
+      <mesh ref={wireframeRef}>
         <icosahedronGeometry args={[1.38, icosaDetail + 1]} />
         <meshStandardMaterial
           color="#8ca5d7"
@@ -90,6 +119,7 @@ export default function CoreGeometry({ isMobile = false, isReducedMotion = false
       </mesh>
 
       {/* ── Inner Faceted Luminous Core ── */}
+      {/* Phase 4B: transparent+opacity added so dissolution can fade it to 8% */}
       <mesh ref={innerMeshRef}>
         <icosahedronGeometry args={[0.85, icosaDetail]} />
         <meshStandardMaterial
@@ -99,6 +129,9 @@ export default function CoreGeometry({ isMobile = false, isReducedMotion = false
           roughness={0.3}
           metalness={0.7}
           flatShading={true}
+          transparent={true}
+          opacity={1.0}
+          depthWrite={false}
         />
       </mesh>
 

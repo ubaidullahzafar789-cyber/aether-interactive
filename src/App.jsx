@@ -5,13 +5,15 @@
    + Sectors + Terminal + CallToAction + Footer + AccessModal.
    ============================================================= */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import SmoothScroll  from './components/layout/SmoothScroll'
 import PageContainer from './components/layout/PageContainer'
 import Navbar        from './components/ui/Navbar'
 import Loader        from './components/ui/Loader'
 import AccessModal   from './components/ui/AccessModal'
 import Footer        from './components/ui/Footer'
+import AetherCore    from './3d/AetherCore'
+import { createScrollState } from './3d/AetherCoreController'
 import Hero          from './sections/Hero'
 import Intro         from './sections/Intro'
 import Capabilities  from './sections/Capabilities'
@@ -19,10 +21,14 @@ import Telemetry     from './sections/Telemetry'
 import Sectors       from './sections/Sectors'
 import Terminal      from './sections/Terminal'
 import CallToAction  from './sections/CallToAction'
+import './App.css'
 
 export default function App() {
   const [showLoader, setShowLoader] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Single shared mutable scroll state driving the persistent 3D AetherCore Canvas
+  const scrollStateRef = useRef(createScrollState())
 
   // Unmount loader after exit animation
   const handleLoadComplete = useCallback(() => {
@@ -49,13 +55,18 @@ export default function App() {
       <SmoothScroll>
         <PageContainer>
 
+          {/* Persistent fixed AetherCore 3D Canvas — single instance across all sections */}
+          <div className="aether-core-fixed-bg" aria-hidden="true">
+            <AetherCore scrollStateRef={scrollStateRef} />
+          </div>
+
           {/* Fixed navigation */}
           <Navbar onOpenModal={handleOpenModal} />
 
           {/* Main page sections */}
           <main id="main-content" aria-label="AETHER main content">
-            <Hero />
-            <Intro />
+            <Hero scrollStateRef={scrollStateRef} />
+            <Intro scrollStateRef={scrollStateRef} />
             <Capabilities />
             <Telemetry />
             <Sectors />

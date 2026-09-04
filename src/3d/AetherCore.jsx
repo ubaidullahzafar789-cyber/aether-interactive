@@ -11,10 +11,11 @@
 import { useState, useEffect, Component, Suspense, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import SceneLighting from './SceneLighting'
-import CoreGeometry from './CoreGeometry'
-import OrbitalRings from './OrbitalRings'
-import DustField from './DustField'
+import SceneLighting  from './SceneLighting'
+import CoreGeometry  from './CoreGeometry'
+import OrbitalRings  from './OrbitalRings'
+import DustField     from './DustField'
+import FragmentField from './FragmentField'   // Phase 4B
 import './AetherCore.css'
 
 class WebGLErrorBoundary extends Component {
@@ -62,9 +63,11 @@ function SceneContent({ isMobile, isTablet, isReducedMotion, scrollStateRef }) {
   return (
     <group position={[0, 0, 0]} scale={scale}>
       <SceneLighting />
-      <CoreGeometry isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
-      <OrbitalRings isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
-      <DustField isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
+      <CoreGeometry  isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
+      <OrbitalRings  isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
+      <DustField     isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
+      {/* Phase 4B: surface-fragment detachment field */}
+      <FragmentField isMobile={isMobile} isReducedMotion={isReducedMotion} scrollStateRef={scrollStateRef} />
     </group>
   )
 }

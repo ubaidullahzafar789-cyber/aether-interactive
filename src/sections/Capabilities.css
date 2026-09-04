@@ -6,15 +6,47 @@
   position: relative;
   width: 100%;
   padding: var(--space-32) var(--container-gutter);
-  background-color: var(--color-bg);
+  /* Layered background: soft atmospheric bleed at top, solidifying to deep space */
+  background: linear-gradient(
+    180deg,
+    rgba(6, 8, 13, 0.45) 0%,
+    rgba(6, 8, 13, 0.85) 320px,
+    var(--color-bg) 640px,
+    var(--color-bg) 100%
+  );
   color: var(--color-text-primary);
   border-bottom: 1px solid var(--color-border);
   overflow: hidden;
 }
 
+/* Atmospheric top ambient glow connecting from Intro */
+.capabilities::before {
+  content:        '';
+  position:       absolute;
+  top:            0;
+  left:           0;
+  right:          0;
+  height:         160px;
+  background:     radial-gradient(
+    ellipse 70% 50% at 50% 0%,
+    rgba(140, 165, 215, 0.035) 0%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index:        0;
+}
+
 .capabilities__inner {
+  position:  relative;
+  z-index:   1;
   max-width: var(--container-max);
-  margin: 0 auto;
+  margin:    0 auto;
+}
+
+.capabilities__header,
+.capabilities__card,
+.capabilities__panel {
+  will-change: opacity, transform;
 }
 
 /* Header */
@@ -296,5 +328,16 @@
   .capabilities__metrics {
     grid-template-columns: 1fr;
     gap: var(--space-3);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .capabilities__header,
+  .capabilities__card,
+  .capabilities__panel {
+    will-change: auto;
+    opacity:     1 !important;
+    transform:   none !important;
   }
 }

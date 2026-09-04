@@ -1,5 +1,19 @@
 /* =============================================================
-   AETHER — App.css
-   Legacy Vite starter styles — superseded by component CSS.
-   Kept to avoid orphan import errors. Safe to remove later.
+   AETHER — App Layout
+   Persistent 3D Canvas Background & Content Stacking
    ============================================================= */
+
+.aether-core-fixed-bg {
+  position:       fixed;
+  inset:          0;
+  width:          100vw;
+  height:         100vh;
+  z-index:        0;
+  pointer-events: none;
+  overflow:       hidden;
+}
+
+#main-content {
+  position: relative;
+  z-index:  1;
+}

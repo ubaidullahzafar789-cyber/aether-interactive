@@ -6,6 +6,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { sound } from '../utils/sound'
+import { useGSAP } from '../hooks/useGSAP'
 import './Capabilities.css'
 
 const CAPABILITIES = [
@@ -168,8 +169,51 @@ export default function Capabilities() {
     sound.playHover()
   }
 
+  // Subtle entry choreography for Capabilities section
+  const capabilitiesRef = useGSAP((gsap, element) => {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion) return
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: element,
+        start: 'top 82%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+
+    tl.fromTo(
+      '.capabilities__header',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      0
+    )
+
+    tl.fromTo(
+      '.capabilities__card',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, stagger: 0.07, duration: 0.65, ease: 'power2.out' },
+      0.12
+    )
+
+    tl.fromTo(
+      '.capabilities__panel',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+      0.18
+    )
+  }, [])
+
   return (
-    <section id="capabilities" className="capabilities" aria-labelledby="capabilities-heading">
+    <section
+      ref={capabilitiesRef}
+      id="capabilities"
+      className="capabilities"
+      aria-labelledby="capabilities-heading"
+    >
       <div className="capabilities__inner">
 
         {/* Section Index Header */}

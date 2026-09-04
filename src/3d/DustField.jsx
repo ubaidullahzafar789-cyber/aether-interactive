@@ -2,6 +2,10 @@
    AETHER — DustField
    Subtle microscopic ambient information particles around the core.
    Responds to scroll-driven dispersion and drift.
+
+   Phase 4B: At high dissolution values the field transitions
+   into a denser information field — particles become smaller,
+   brighter, and condense inward slightly.
    ============================================================= */
 
 import { useRef, useMemo } from 'react'
@@ -34,19 +38,29 @@ export default function DustField({ isMobile = false, isReducedMotion = false, s
 
     const scrollState = scrollStateRef?.current || {
       dustDispersion: 1.0,
-      rotationSpeed: 1.0,
+      rotationSpeed:  1.0,
+      dissolution:    0.0,
     }
 
-    const speedMult = scrollState.rotationSpeed || 1.0
+    const speedMult  = scrollState.rotationSpeed  || 1.0
     const dispersion = scrollState.dustDispersion || 1.0
+    const dissolution = scrollState.dissolution    ?? 0.0
 
     if (!isReducedMotion) {
       pointsRef.current.rotation.y += 0.0006 * speedMult
       pointsRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.5) * 0.1
     }
 
-    // Scroll-driven particle field dispersion
-    pointsRef.current.scale.setScalar(dispersion)
+    // ── Phase 4B: Information Field transition ──────────────
+    // At high dissolution the ambient dust repurposes as a crisp
+    // information field: tighter particles, higher opacity.
+    // Particle size 0.032 → 0.018 (precise data points, not haze)
+    pointsRef.current.material.size = 0.032 - dissolution * 0.014
+    // Opacity 0.38 → 0.65 (field becomes more defined)
+    pointsRef.current.material.opacity = 0.38 + dissolution * 0.27
+    // Scale: dispersion drives spread; at dissolution=1 it contracts
+    // slightly inward (2.0 → 1.6) so the field coalesces rather than scatters
+    pointsRef.current.scale.setScalar(dispersion * (1 - dissolution * 0.2))
   })
 
   return (

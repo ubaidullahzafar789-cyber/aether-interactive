@@ -17,5 +17,11 @@ export function createScrollState() {
     emissiveIntensity: 0.25, // Inner core emissive glow brightness
     cameraZ:           8.5,  // Camera position along Z-axis
     dustDispersion:    1.0,  // Ambient dust particle spread factor
+
+    // ── Phase 4B: Core → Information Field ────────────────────
+    dissolution:      0.0,   // 0→1: overall deconstruction progress
+    shellOpacity:     0.75,  // Outer sphere transparency (matches initial material value)
+    ringTilt:         0.0,   // 0→1: ring axis drift (Instability state)
+    fragmentProgress: 0.0,   // 0→1: surface-fragment ejection amount
   }
 }

@@ -17,15 +17,15 @@
    ============================================================= */
 
 import { useRef } from 'react'
-import AetherCore from '../3d/AetherCore'
 import { createScrollState } from '../3d/AetherCoreController'
 import { useGSAP } from '../hooks/useGSAP'
 import { ScrollTrigger } from '../animations/gsap'
 import './Hero.css'
 
-export default function Hero() {
-  // scrollStateRef drives 3D parameters via GSAP tween — no React re-renders
-  const scrollStateRef = useRef(createScrollState())
+export default function Hero({ scrollStateRef: externalScrollStateRef }) {
+  // Use shared scrollStateRef from App layout, or fallback to internal ref
+  const internalScrollStateRef = useRef(createScrollState())
+  const scrollStateRef = externalScrollStateRef || internalScrollStateRef
 
   // useGSAP returns the element ref we must attach to the section so that
   // gsap.context() scopes queries to only this component's DOM subtree.
@@ -180,6 +180,52 @@ export default function Hero() {
       0.72
     )
 
+    // ── PHASE 4B: INSTABILITY  (tl time 0.55 → 0.72) ─────────
+    // Rings begin losing orbital alignment; outer shell thins.
+    // Deliberately overlaps Phase 2→3 (Approach) so the transition
+    // feels organic — the Core is already destabilising before the
+    // camera reaches Threshold.
+    tl.to(
+      state,
+      {
+        ringTilt:     1.0,
+        shellOpacity: 0.38,
+        duration:     0.17,
+        ease:         'power1.inOut',
+      },
+      0.55
+    )
+
+    // ── PHASE 4B: DECONSTRUCTION  (tl time 0.68 → 0.88) ──────
+    // Surface fragments begin detaching.
+    // Information field starts to activate.
+    tl.to(
+      state,
+      {
+        dissolution:      0.55,
+        fragmentProgress: 0.45,
+        duration:         0.20,
+        ease:             'power1.inOut',
+      },
+      0.68
+    )
+
+    // ── PHASE 4B: INFORMATION FIELD  (tl time 0.85 → 1.0) ────
+    // Core geometry dissolves to a ghost.
+    // Particle field dominates the viewport.
+    // "Physical matter becoming information."
+    tl.to(
+      state,
+      {
+        dissolution:      1.0,
+        fragmentProgress: 1.0,
+        shellOpacity:     0.08,
+        duration:         0.15,
+        ease:             'power2.inOut',
+      },
+      0.85
+    )
+
     // ── Refresh ScrollTrigger after a tick so Lenis can measure
     //    the new total scrollable height (pin spacer is injected
     //    after the first render, so we need a short delay). ──
@@ -195,8 +241,6 @@ export default function Hero() {
       className="hero"
       aria-label="AETHER — Hero"
     >
-      {/* ── Interactive 3D Aether Core Scene (R3F) ── */}
-      <AetherCore scrollStateRef={scrollStateRef} />
 
       {/* ── Content ── */}
       <div className="hero__content">
