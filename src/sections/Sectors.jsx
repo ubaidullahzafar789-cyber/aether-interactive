@@ -5,6 +5,7 @@
 
 import { useState } from 'react'
 import { sound } from '../utils/sound'
+import { useGSAP } from '../hooks/useGSAP'
 import './Sectors.css'
 
 const SECTORS = [
@@ -76,8 +77,51 @@ export default function Sectors() {
     setActiveTab(index)
   }
 
+  /* ── GSAP Scroll-Reveal Choreography ── */
+  const sectorsRef = useGSAP((gsap, element) => {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion) return
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: element,
+        start: 'top 82%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+
+    tl.fromTo(
+      '.sectors__header',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      0
+    )
+
+    tl.fromTo(
+      '.sectors__tab-btn',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, stagger: 0.06, duration: 0.6, ease: 'power2.out' },
+      0.1
+    )
+
+    tl.fromTo(
+      '.sectors__showcase',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+      0.16
+    )
+  }, [])
+
   return (
-    <section id="sectors" className="sectors" aria-labelledby="sectors-heading">
+    <section
+      ref={sectorsRef}
+      id="sectors"
+      className="sectors"
+      aria-labelledby="sectors-heading"
+    >
       <div className="sectors__inner">
 
         {/* Header */}

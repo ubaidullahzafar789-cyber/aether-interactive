@@ -7,7 +7,12 @@
   width: 100%;
   padding: var(--space-32) var(--container-gutter);
   background-color: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+}
+
+.sectors__header,
+.sectors__tab-btn,
+.sectors__showcase {
+  will-change: opacity, transform;
 }
 
 .sectors__inner {
@@ -251,5 +256,16 @@
   }
   .sectors__tabs {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .sectors__header,
+  .sectors__tab-btn,
+  .sectors__showcase {
+    will-change: auto;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

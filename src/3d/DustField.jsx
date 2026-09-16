@@ -21,8 +21,11 @@ export default function DustField({ isMobile = false, isReducedMotion = false, s
     const pos = new Float32Array(count * 3)
 
     for (let i = 0; i < count; i++) {
+      // eslint-disable-next-line react-hooks/purity
       const radius = 2.0 + Math.random() * 4.5
+      // eslint-disable-next-line react-hooks/purity
       const theta = Math.random() * Math.PI * 2
+      // eslint-disable-next-line react-hooks/purity
       const phi = Math.acos(Math.random() * 2 - 1)
 
       pos[i * 3]     = radius * Math.sin(phi) * Math.cos(theta)

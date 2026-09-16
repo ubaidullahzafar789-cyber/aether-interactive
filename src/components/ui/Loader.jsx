@@ -15,7 +15,28 @@ export default function Loader({ onComplete }) {
   const [phase, setPhase] = useState('entering')
 
   useEffect(() => {
-    // Timeline:
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion) {
+      // Reduced-motion fast path: brief accessible confirmation, then instantaneous exit
+      const t1 = setTimeout(() => setPhase('visible'), 50)
+      const t2 = setTimeout(() => setPhase('exiting'), 200)
+      const t3 = setTimeout(() => onComplete?.(), 400)
+
+      return () => {
+        document.body.style.overflow = originalOverflow
+        clearTimeout(t1)
+        clearTimeout(t2)
+        clearTimeout(t3)
+      }
+    }
+
+    // Standard cinematic timeline:
     //   0ms    — entering (opacity 0, begin fade-in)
     //  400ms   — visible  (opacity 1, hold)
     // 2200ms   — exiting  (fade out begins)
@@ -25,6 +46,7 @@ export default function Loader({ onComplete }) {
     const t3 = setTimeout(() => onComplete?.(),        3100)
 
     return () => {
+      document.body.style.overflow = originalOverflow
       clearTimeout(t1)
       clearTimeout(t2)
       clearTimeout(t3)

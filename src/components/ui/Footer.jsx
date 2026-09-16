@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { sound } from '../../utils/sound'
+import { useGSAP } from '../../hooks/useGSAP'
 import { NAV_LINKS } from '../../utils/constants'
 import './Footer.css'
 
@@ -39,8 +40,39 @@ export default function Footer() {
     setEmail('')
   }
 
+  /* ── GSAP Scroll-Reveal Choreography ── */
+  const footerRef = useGSAP((gsap, element) => {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion) return
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: element,
+        start: 'top 90%',
+        toggleActions: 'play none none none',
+      },
+    })
+
+    tl.fromTo(
+      '.footer__top',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      0
+    )
+
+    tl.fromTo(
+      '.footer__bottom',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
+      0.12
+    )
+  }, [])
+
   return (
-    <footer className="footer" role="contentinfo">
+    <footer ref={footerRef} className="footer" role="contentinfo">
       <div className="footer__inner">
 
         {/* Top Section */}

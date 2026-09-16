@@ -14,6 +14,7 @@ const LenisContext = createContext(null)
  * Access the Lenis instance from any child component.
  * @returns {React.RefObject<import('lenis').default>}
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLenisContext() {
   return useContext(LenisContext)
 }

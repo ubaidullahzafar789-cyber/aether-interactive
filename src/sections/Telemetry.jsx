@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { sound } from '../utils/sound'
+import { useGSAP } from '../hooks/useGSAP'
 import './Telemetry.css'
 
 const MODES = [
@@ -65,14 +66,12 @@ const INITIAL_NODES = [
 export default function Telemetry() {
   const [activeMode, setActiveMode] = useState('quantum')
   const [nodes, setNodes] = useState(INITIAL_NODES)
-  const [pulse, setPulse] = useState(0)
 
   const currentMode = MODES.find((m) => m.id === activeMode) || MODES[0]
 
   /* Micro live spectrum jitter simulation */
   useEffect(() => {
     const interval = setInterval(() => {
-      setPulse((p) => (p + 1) % 100)
       setNodes((prevNodes) =>
         prevNodes.map((node) => ({
           ...node,
@@ -92,8 +91,58 @@ export default function Telemetry() {
     setActiveMode(modeId)
   }
 
+  /* ── GSAP Scroll-Reveal Choreography ── */
+  const telemetryRef = useGSAP((gsap, element) => {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion) return
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: element,
+        start: 'top 82%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+
+    tl.fromTo(
+      '.telemetry__header',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      0
+    )
+
+    tl.fromTo(
+      '.telemetry__modes',
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
+      0.08
+    )
+
+    tl.fromTo(
+      '.telemetry__card',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, stagger: 0.09, duration: 0.65, ease: 'power2.out' },
+      0.14
+    )
+
+    tl.fromTo(
+      '.telemetry__banner',
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+      0.2
+    )
+  }, [])
+
   return (
-    <section id="telemetry" className="telemetry" aria-labelledby="telemetry-heading">
+    <section
+      ref={telemetryRef}
+      id="telemetry"
+      className="telemetry"
+      aria-labelledby="telemetry-heading"
+    >
       <div className="telemetry__inner">
 
         {/* Section Header */}

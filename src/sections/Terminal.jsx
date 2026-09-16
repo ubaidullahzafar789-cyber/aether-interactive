@@ -5,6 +5,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { sound } from '../utils/sound'
+import { useGSAP } from '../hooks/useGSAP'
 import './Terminal.css'
 
 const INITIAL_LOGS = [
@@ -133,8 +134,51 @@ export default function Terminal() {
     sound.playTerminalKey()
   }
 
+  /* ── GSAP Scroll-Reveal Choreography ── */
+  const terminalRef = useGSAP((gsap, element) => {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion) return
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: element,
+        start: 'top 82%',
+        toggleActions: 'play none none reverse',
+      },
+    })
+
+    tl.fromTo(
+      '.terminal__header',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      0
+    )
+
+    tl.fromTo(
+      '.terminal__window',
+      { opacity: 0, y: 20, scale: 0.98 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power2.out' },
+      0.1
+    )
+
+    tl.fromTo(
+      '.terminal__presets',
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
+      0.18
+    )
+  }, [])
+
   return (
-    <section id="terminal" className="terminal" aria-labelledby="terminal-heading">
+    <section
+      ref={terminalRef}
+      id="terminal"
+      className="terminal"
+      aria-labelledby="terminal-heading"
+    >
       <div className="terminal__inner">
 
         {/* Section Header */}

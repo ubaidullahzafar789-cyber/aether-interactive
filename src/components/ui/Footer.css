@@ -10,6 +10,11 @@
   border-top: 1px solid var(--color-border);
 }
 
+.footer__top,
+.footer__bottom {
+  will-change: opacity, transform;
+}
+
 .footer__inner {
   max-width: var(--container-max);
   margin: 0 auto;
@@ -205,5 +210,15 @@
   .footer__top {
     grid-template-columns: 1fr;
     gap: var(--space-8);
+  }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .footer__top,
+  .footer__bottom {
+    will-change: auto;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

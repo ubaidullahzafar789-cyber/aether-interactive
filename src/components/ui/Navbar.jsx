@@ -8,17 +8,48 @@ import { useState, useEffect } from 'react'
 import Button from './Button'
 import { sound } from '../../utils/sound'
 import { NAV_LINKS } from '../../utils/constants'
+import { useLenisContext } from '../layout/SmoothScroll'
 import './Navbar.css'
 
 export default function Navbar({ onOpenModal }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('#hero')
+  const lenisRef = useLenisContext()
 
   /* Scrolled state — adds frosted background */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  /* Active section tracking via IntersectionObserver */
+  useEffect(() => {
+    const sectionIds = ['hero', 'intro', 'capabilities', 'telemetry', 'sectors', 'terminal']
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean)
+
+    if (elements.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`)
+          }
+        })
+      },
+      {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0,
+      }
+    )
+
+    elements.forEach((el) => observer.observe(el))
+
+    return () => observer.disconnect()
   }, [])
 
   /* Close mobile menu when viewport expands past tablet breakpoint */
@@ -29,6 +60,35 @@ export default function Navbar({ onOpenModal }) {
     window.addEventListener('resize', onResize, { passive: true })
     return () => window.removeEventListener('resize', onResize)
   }, [])
+
+  /* Close mobile menu on Escape key */
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [menuOpen])
+
+  /* Lock background scroll when mobile menu is open */
+  useEffect(() => {
+    if (menuOpen) {
+      const originalOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      const lenis = lenisRef?.current   // capture stable ref value for cleanup
+      lenis?.stop()
+
+      return () => {
+        document.body.style.overflow = originalOverflow
+        lenis?.start()
+      }
+    }
+  }, [menuOpen, lenisRef])
 
   const toggleMenu = () => {
     sound.playClick()
@@ -46,9 +106,22 @@ export default function Navbar({ onOpenModal }) {
     if (onOpenModal) onOpenModal()
   }
 
-  const handleLinkClick = () => {
+  const handleNavigation = (e, href) => {
+    e.preventDefault()
     sound.playClick()
     closeMenu()
+
+    if (!href) return
+    const target = document.querySelector(href)
+    if (target && lenisRef?.current) {
+      lenisRef.current.scrollTo(target, {
+        offset: -24,
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      })
+    } else if (target) {
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -67,7 +140,7 @@ export default function Navbar({ onOpenModal }) {
           href="#hero"
           className="navbar__logo"
           aria-label="AETHER — return to top"
-          onClick={handleLinkClick}
+          onClick={(e) => handleNavigation(e, '#hero')}
         >
           AETHER
         </a>
@@ -75,19 +148,23 @@ export default function Navbar({ onOpenModal }) {
         {/* ── Desktop Navigation ── */}
         <nav className="navbar__nav" aria-label="Primary navigation">
           <ul className="navbar__links" role="list">
-            {NAV_LINKS.map((link) => (
-              <li key={link.id}>
-                <a
-                  id={link.id}
-                  href={link.href}
-                  className="navbar__link"
-                  onClick={handleLinkClick}
-                  onMouseEnter={() => sound.playHover()}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = activeSection === link.href
+              return (
+                <li key={link.id}>
+                  <a
+                    id={link.id}
+                    href={link.href}
+                    className={`navbar__link ${isActive ? 'navbar__link--active' : ''}`}
+                    aria-current={isActive ? 'location' : undefined}
+                    onClick={(e) => handleNavigation(e, link.href)}
+                    onMouseEnter={() => sound.playHover()}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              )
+            })}
           </ul>
         </nav>
 
@@ -125,18 +202,22 @@ export default function Navbar({ onOpenModal }) {
         aria-hidden={!menuOpen}
       >
         <ul className="navbar__mobile-links" role="list">
-          {NAV_LINKS.map((link) => (
-            <li key={link.id}>
-              <a
-                href={link.href}
-                className="navbar__mobile-link"
-                tabIndex={menuOpen ? 0 : -1}
-                onClick={handleLinkClick}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isActive = activeSection === link.href
+            return (
+              <li key={link.id}>
+                <a
+                  href={link.href}
+                  className={`navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`}
+                  tabIndex={menuOpen ? 0 : -1}
+                  aria-current={isActive ? 'location' : undefined}
+                  onClick={(e) => handleNavigation(e, link.href)}
+                >
+                  {link.label}
+                </a>
+              </li>
+            )
+          })}
         </ul>
 
         <div className="navbar__mobile-cta">

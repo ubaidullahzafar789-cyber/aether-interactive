@@ -7,7 +7,12 @@
   width: 100%;
   padding: var(--space-32) var(--container-gutter);
   background-color: var(--color-void);
-  border-bottom: 1px solid var(--color-border);
+}
+
+.terminal__header,
+.terminal__window,
+.terminal__presets {
+  will-change: opacity, transform;
 }
 
 .terminal__inner {
@@ -222,5 +227,16 @@
 @media (max-width: 600px) {
   .terminal {
     padding: var(--space-20) var(--container-gutter);
+  }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .terminal__header,
+  .terminal__window,
+  .terminal__presets {
+    will-change: auto;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

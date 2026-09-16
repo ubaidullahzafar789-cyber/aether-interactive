@@ -99,6 +99,16 @@
   transform: scaleX(1);
 }
 
+.navbar__link--active {
+  color: var(--color-text-primary);
+}
+
+.navbar__link--active::after {
+  transform: scaleX(1);
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 8px rgba(184, 200, 232, 0.4);
+}
+
 /* ── Actions ── */
 .navbar__actions {
   display:     flex;
@@ -205,6 +215,10 @@
 
 .navbar__mobile-link:hover {
   color: var(--color-text-primary);
+}
+
+.navbar__mobile-link--active {
+  color: var(--color-accent-bright);
 }
 
 .navbar__mobile-cta {

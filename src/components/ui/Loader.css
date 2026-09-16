@@ -3,17 +3,19 @@
    ============================================================= */
 
 .loader {
-  position:       fixed;
-  inset:          0;
-  z-index:        9999;
-  background:     var(--color-void);
-  display:        flex;
-  align-items:    center;
-  justify-content: center;
+  position:            fixed;
+  inset:               0;
+  z-index:             9999;
+  background:          var(--color-void);
+  display:             flex;
+  align-items:         center;
+  justify-content:      center;
+  touch-action:        none;
+  overscroll-behavior: none;
   /* Hidden by default — phase class drives opacity */
-  opacity:        0;
-  pointer-events: all;
-  transition:     opacity var(--dur-slow) var(--ease-smooth);
+  opacity:             0;
+  pointer-events:      all;
+  transition:          opacity var(--dur-slow) var(--ease-smooth);
 }
 
 .loader--entering { opacity: 0; }

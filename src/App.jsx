@@ -54,6 +54,10 @@ export default function App() {
       {/* Lenis smooth scroll wraps entire page */}
       <SmoothScroll>
         <PageContainer>
+          {/* Skip to main content link for keyboard / screen reader accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
 
           {/* Persistent fixed AetherCore 3D Canvas — single instance across all sections */}
           <div className="aether-core-fixed-bg" aria-hidden="true">

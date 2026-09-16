@@ -3,8 +3,9 @@
    Interactive request clearance modal with simulated security key generation.
    ============================================================= */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { sound } from '../../utils/sound'
+import { useLenisContext } from '../layout/SmoothScroll'
 import Button from './Button'
 import './AccessModal.css'
 
@@ -17,27 +18,66 @@ export default function AccessModal({ isOpen, onClose }) {
   })
   const [status, setStatus] = useState('idle') // 'idle' | 'generating' | 'success'
   const [accessKey, setAccessKey] = useState('')
+  const modalRef = useRef(null)
+  const lenisRef = useLenisContext()
 
-  /* Lock body scroll & handle Escape key while modal is open */
+  /* Lock body scroll, pause Lenis, trap focus & handle Escape key while modal is open */
   useEffect(() => {
     if (!isOpen) return
 
     const originalOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    const lenis = lenisRef?.current   // capture stable ref value for cleanup
+    lenis?.stop()
+
+    // Auto-focus first input or close button after mounting
+    const focusTimer = setTimeout(() => {
+      if (modalRef.current) {
+        const firstFocusable = modalRef.current.querySelector(
+          'input, button:not(.access-modal__close), select, textarea, button'
+        )
+        firstFocusable?.focus()
+      }
+    }, 50)
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         onClose()
+        return
+      }
+
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusables.length === 0) return
+
+        const firstElement = focusables[0]
+        const lastElement = focusables[focusables.length - 1]
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault()
+            lastElement.focus()
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault()
+            firstElement.focus()
+          }
+        }
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
 
     return () => {
+      clearTimeout(focusTimer)
       document.body.style.overflow = originalOverflow
+      lenis?.start()
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isOpen, onClose])
+  }, [isOpen, onClose, lenisRef])
 
   if (!isOpen) return null
 
@@ -66,8 +106,18 @@ export default function AccessModal({ isOpen, onClose }) {
   }
 
   return (
-    <div className="access-modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="access-modal" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="access-modal-overlay"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div
+        ref={modalRef}
+        className="access-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
 
         <button className="access-modal__close" onClick={onClose} aria-label="Close modal">
           &times;
@@ -77,7 +127,7 @@ export default function AccessModal({ isOpen, onClose }) {
           <form className="access-modal__form" onSubmit={handleSubmit}>
             <div className="access-modal__header">
               <span className="access-modal__eyebrow">LEVEL 5 CLEARANCE</span>
-              <h3 className="access-modal__title">REQUEST CLEARANCE KEY</h3>
+              <h3 id="modal-title" className="access-modal__title">REQUEST CLEARANCE KEY</h3>
               <p className="access-modal__subtitle">
                 Submit credentials for evaluation by the AETHER Quantum Validation Mesh.
               </p>

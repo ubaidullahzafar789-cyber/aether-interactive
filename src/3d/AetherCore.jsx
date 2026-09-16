@@ -76,24 +76,45 @@ export default function AetherCore({ scrollStateRef }) {
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 1200
   )
-  const [isReducedMotion, setIsReducedMotion] = useState(false)
+  const [isReducedMotion, setIsReducedMotion] = useState(
+    () => typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  )
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     // Window resize listener
     const handleResize = () => setWindowWidth(window.innerWidth)
     window.addEventListener('resize', handleResize, { passive: true })
 
-    // Reduced motion media query listener
+    // Reduced motion media query listener — only subscribe to changes,
+    // initial value is read lazily in useState initializer above
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setIsReducedMotion(mediaQuery.matches)
-
     const handleMotionChange = (e) => setIsReducedMotion(e.matches)
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleMotionChange)
     }
 
+    // Conservative visibility tracking:
+    // Canvas is active through Hero, Intro, and Capabilities.
+    // Telemetry, Sectors, Terminal, CTA, and Footer have opaque solid backgrounds.
+    // A 600px buffer ensures frameloop resumes smoothly well before Capabilities
+    // re-enters the viewport during reverse scroll.
+    const checkVisibility = () => {
+      const capEl = document.getElementById('capabilities')
+      if (capEl) {
+        const rect = capEl.getBoundingClientRect()
+        setIsVisible(rect.bottom > -600)
+      }
+    }
+
+    window.addEventListener('scroll', checkVisibility, { passive: true })
+    checkVisibility()
+
     return () => {
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', checkVisibility)
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', handleMotionChange)
       }
@@ -107,6 +128,7 @@ export default function AetherCore({ scrollStateRef }) {
     <div className="aether-core-canvas-container" aria-hidden="true">
       <WebGLErrorBoundary>
         <Canvas
+          frameloop={isVisible ? 'always' : 'demand'}
           camera={{ position: [0, 0, 8.5], fov: 45 }}
           dpr={[1, 1.5]}
           gl={{
