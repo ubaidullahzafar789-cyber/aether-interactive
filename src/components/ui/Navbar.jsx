@@ -115,7 +115,7 @@ export default function Navbar({ onOpenModal }) {
     const target = document.querySelector(href)
     if (target && lenisRef?.current) {
       lenisRef.current.scrollTo(target, {
-        offset: -24,
+        offset: -88,
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       })
