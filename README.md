@@ -1,158 +1,291 @@
 # AETHER — Intelligence Beyond the Visible
 
-> **AETHER** is a futuristic, cinematic web experience showcasing a next-generation machine intelligence platform. Built with cutting-edge frontend engineering, interactive 3D WebGL scenes, procedural audio synthesis, and fluid kinetic motion, AETHER represents intelligence not just as an interface, but as a living, breathing continuum.
+AETHER is a cinematic, interactive web experience built to demonstrate a concept for a next-generation machine intelligence platform. It is not a data-entry UI or a marketing page — it is a scroll-driven, WebGL-powered environment in which the visitor moves through a living interface: an orbiting 3D core that reacts to scroll position, procedural audio that responds to interaction, and a sequence of information-dense sections that tell a coherent visual story.
+
+**[Live Demo](https://aether-interactive-9oyesd8gr-study-mate-ai-team.vercel.app)** &nbsp;·&nbsp; **[GitHub Repository](https://github.com/ubaidullahzafar789-cyber/aether-interactive)**
 
 ---
 
-## Concept
+## Status
 
-In an era of ubiquitous AI, AETHER explores the frontier beyond conventional conversational interfaces: **ambient, autonomous, and omnipresent machine intelligence**. 
-
-Conceived with a dark celestial aesthetic, glassmorphic HUDs, and quantum instrumentation, AETHER embodies the philosophy: *"Not seen. Felt."* The interface translates complex multidimensional neural processes into tactile visual landscapes and real-time auditory telemetry.
-
----
-
-## Key Features
-
-- **Cinematic 3D Neural Core (`AetherCore`)**:
-  - Persistent, unified Three.js WebGL canvas running in the background across all sections.
-  - Procedural orbital rings, floating crystalline fragments, deep stellar dust fields, and reactive lighting.
-  - Smooth mouse parallax and scroll-linked camera/geometry transformations.
-- **Narrative Scroll Experience**:
-  - Silky momentum scrolling powered by Lenis, tightly coupled to GSAP ScrollTrigger timelines.
-  - Dynamic navbar with active section detection and precise scroll offsets.
-- **Interactive Capabilities Matrix**:
-  - Full WAI-ARIA compliant tabbed interface featuring 4 core paradigms: *Perception*, *Synthesis*, *Autonomy*, and *Alignment*.
-  - Keyboard navigation (Arrow keys, Home, End) with automated panel switching.
-  - Deep telemetry readouts, architecture maps, and real-time throughput metrics.
-- **Quantum Telemetry Dashboard**:
-  - Live animated telemetry metrics: Quantum Coherence (99.984%), Entanglement Density, Flux Resonance, and Neural Drift.
-  - Responsive visual pulse monitors and diagnostic sub-gauges.
-- **Mission-Critical Sectors**:
-  - Deployment profiles across Aerospace & Orbital Systems, Deep Biosystems & Genomic Folding, Global Energy Grids, and Synthetic Quantum Physics.
-  - Interactive sector inspection cards with dynamic stat displays.
-- **Neural Diagnostic Terminal**:
-  - Functional in-browser CLI emulator with command execution (`help`, `status`, `telemetry`, `matrix`, `ping`, `clear`, `diagnose`).
-  - Terminal history, command autocomplete hints, and authentic CRT styling.
-- **Procedural Audio Synthesizer**:
-  - Native Web Audio API sound generator (`sound.js`) producing custom harmonic hums, radar blips, keypress chirps, and modal resonance.
-  - Zero external MP3/WAV assets required — 100% lightweight procedural code.
-- **Access Clearance Protocol**:
-  - Accessible modal dialog for requesting enterprise clearance keys, complete with focus trapping and ESC dismissal.
+| Item | State |
+|---|---|
+| Implementation | Complete (Phases 1–10) |
+| Build | Passing |
+| Deployment | Live on Vercel |
+| Repository | Public |
 
 ---
 
-## Interactive Experience
+## Overview
 
-AETHER is designed as an interactive art piece and technical showcase:
-- **Audio Feedback**: Hovering interactive elements, switching tabs, typing in the terminal, or triggering modals yields subtle, non-intrusive futuristic sound effects.
-- **Fluid Camera Choreography**: As you scroll through the page, the 3D AetherCore smoothly transitions its focal point, ring inclination, and particle dispersion speed to match each section's thematic tone.
-- **Terminal Playground**: Visitors can interact directly with the embedded terminal to inspect system parameters or trigger diagnostic sweeps.
+AETHER frames machine intelligence as something ambient and atmospheric rather than transactional. The experience opens on a full-viewport 3D core — a layered sphere of geometry, orbital rings, and particle fields — and uses scroll to drive the camera deeper into it. Each section that follows has its own visual language and interactive system, while the 3D scene persists as a fixed background layer throughout.
+
+The project combines scroll-driven storytelling, WebGL rendering, procedural audio synthesis, and a carefully maintained accessibility layer across responsive breakpoints.
+
+---
+
+## Experience
+
+The page is composed of eight sequential stages:
+
+| # | Section | What the visitor encounters |
+|---|---|---|
+| — | Loader | Cinematic intro screen that unmounts after its exit animation |
+| 01 | Hero | Full-viewport landing with the AETHER wordmark and the 3D core. Scroll drives a four-state camera choreography pinned across 300vh |
+| 02 | Intro / Information Field | Narrative philosophy section. As the core dissolves into fragments, the page transitions from 3D spectacle to information density |
+| 03 | Capabilities | Neural diagnostic console: four capability tabs, each with a live canvas visualizer, animated metrics, and signal data |
+| 04 | Telemetry | Four-node cluster readout with switchable display modes and spectrum bar animation gated to viewport visibility |
+| 05 | Target Sectors | Tabbed showcase of four deployment contexts |
+| 06 | AETHER Terminal | In-browser CLI simulator. The visitor types or clicks preset commands and receives synthetic output |
+| 07 | Access Clearance | Final call-to-action section that opens an access key request modal |
+| — | Footer | Dispatch interface with live UTC clock, navigation links, sound toggle, and newsletter input |
+
+---
+
+## Core Features
+
+**3D / WebGL**
+- Persistent single `<Canvas>` (React Three Fiber) fixed behind all page content
+- Central core geometry: translucent outer sphere + faceted icosahedron inner lattice
+- Instanced orbital rings with scroll-driven tilt and radius expansion
+- Instanced dust particle field with scroll-driven dispersion
+- Fragment field — instanced mesh particles that eject from the core surface as scroll progresses
+- Scene lighting via ambient, directional, and point lights
+- Scroll-driven camera Z-approach via lerped `useFrame` loop
+- WebGL error boundary — silently degrades if the context fails
+- Canvas `frameloop` switches to `'demand'` when the 3D section scrolls off-screen
+- Device pixel ratio capped at `[1, 1.5]`
+- Responsive scene scale (desktop / tablet / mobile breakpoints)
+
+**Scroll & Animation**
+- Lenis smooth scroll (duration 1.2, exponential easing)
+- Lenis RAF ticked inside the GSAP ticker for frame-accurate synchronization
+- GSAP ScrollTrigger drives all cinematic hero scroll states
+- Mutable `scrollStateRef` bridge updates scene parameters without React re-renders
+- Per-section scroll-reveal timelines (opacity, translate, scale) on all major sections
+- `prefers-reduced-motion` bail-out in every GSAP timeline — camera snaps, animations skip
+
+**Interactive Systems**
+- Capabilities section: four tabbed visualizers, each drawing a unique canvas animation
+- Telemetry section: four switchable display modes; spectrum bar jitter runs via `setInterval` gated by `IntersectionObserver` and `document.visibilityState`
+- Sectors section: four WAI-ARIA tab panels with keyboard navigation
+- Terminal: typed or preset commands with synthetic output
+- Access modal: multi-field form with simulated key generation sequence
+
+**Audio**
+- Fully procedural Web Audio API sound system — no external audio files
+- `sound.playHover()` — sine chirp on interactive element hover
+- `sound.playClick()` — triangle click on button/tab activation
+- `sound.playTerminalKey()` — randomized square-wave keypress ticks
+- `sound.playModalOpen()` — ascending sine sweep on modal open
+- `sound.playCapabilitySelect(id)` — unique synthesized sound per capability tab
+- Global mute toggle exposed in the Footer
+
+**Accessibility**
+- Skip-to-main-content link at page top
+- Capabilities and Sectors implemented with WAI-ARIA `tablist` / `tab` / `tabpanel` roles
+- Arrow key, Home, End keyboard navigation on tab sets
+- Access modal: `role="dialog"`, `aria-modal="true"`, focus trap, Escape key dismissal, Lenis scroll lock while open
+- Terminal input labelled with `aria-label`
+- AetherCore canvas marked `aria-hidden="true"` throughout
+- `prefers-reduced-motion` respected in all GSAP timelines and in the R3F `useFrame` lerp factor
+
+**Responsive**
+- Three explicit breakpoints: mobile (≤ 768px), tablet (769–1024px), desktop (> 1024px)
+- 3D scene scale adjusted per breakpoint
+- Navbar collapses to a full-screen mobile drawer at tablet/mobile width
+- All sections reflow via CSS for narrower viewports
 
 ---
 
 ## Technology Stack
 
-- **Core Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **3D Graphics & WebGL**: [Three.js](https://threejs.org/), [@react-three/fiber](https://r3f.docs.pmnd.rs/)
-- **Animation & Motion**: [GSAP 3](https://gsap.com/) (ScrollTrigger, Timeline)
-- **Smooth Scroll**: [Lenis](https://lenis.darkroom.engineering/)
-- **Audio Engine**: Native Browser [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-- **Styling**: Vanilla CSS (Modular CSS Architecture with CSS Custom Properties / Tokens)
-- **Type Checking & Linting**: ESLint 9 + React Hooks Plugin
+**Frontend**
+
+| Library | Version | Role |
+|---|---|---|
+| React | 19 | UI component model |
+| Vite | 8 | Dev server, bundler |
+| Vanilla CSS | — | All styling via CSS custom properties |
+
+**3D / Graphics**
+
+| Library | Version | Role |
+|---|---|---|
+| Three.js | 0.185 | WebGL scene, geometry, materials, lighting |
+| React Three Fiber | 9 | Declarative R3F canvas and hooks (`useFrame`) |
+
+> `@react-three/drei` is intentionally absent — all helpers are implemented directly.
+
+**Animation / Interaction**
+
+| Library | Version | Role |
+|---|---|---|
+| GSAP | 3.15 | ScrollTrigger timelines, section reveals |
+| Lenis | 1.3 | Smooth scroll, synced to GSAP ticker |
+| Web Audio API | Native | Procedural sound synthesis |
+
+**Tooling**
+
+| Tool | Role |
+|---|---|
+| ESLint 10 | Linting (react-hooks, react-refresh plugins) |
+| @vitejs/plugin-react | Fast Refresh in development |
 
 ---
 
-## Architecture Overview
+## Technical Architecture
 
-1. **Single Canvas WebGL Engine**: Rather than spawning multiple 3D canvases across sections (which degrades GPU performance and can exhaust WebGL contexts), AETHER mounts a single persistent `<Canvas>` in `AetherCore.jsx`.
-2. **Decoupled Scroll Controller**: A mutable `scrollStateRef` bridge tracks scroll progress and camera targets without causing unnecessary React re-renders.
-3. **Procedural Zero-Asset Design**: All visual icons, backgrounds, fonts, and audio effects are rendered procedurally or via lightweight vector SVGs and Google Fonts, eliminating heavy image or media downloads.
-4. **Token-Driven CSS System**: Clean design system in `src/index.css` defining semantic color scales (`--color-bg`, `--color-accent-primary`, `--color-void`), typography scales (`Syne`, `Inter`, monospace), spacing, and glassmorphic elevations.
-
----
-
-## Installation
-
-Ensure you have [Node.js](https://nodejs.org/) (version 18.0 or higher recommended) installed.
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd AETHER
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
----
-
-## Development
-
-Start the local development server with Hot Module Replacement (HMR):
-
-```bash
-npm run dev
+```
+App
+├── Loader              — cinematic intro, unmounts on complete
+├── AccessModal         — dialog, focus-trapped
+└── SmoothScroll        — Lenis context provider
+    └── PageContainer
+        ├── skip-link
+        ├── AetherCore (fixed bg, aria-hidden)   ← single persistent Canvas
+        ├── Navbar
+        └── main
+            ├── Hero           ← feeds scrollStateRef to AetherCore
+            ├── Intro          ← feeds scrollStateRef to AetherCore
+            ├── Capabilities
+            ├── Telemetry
+            ├── Sectors
+            ├── Terminal
+            └── CallToAction
+        └── Footer
 ```
 
-Open your browser and navigate to the local address displayed in your terminal (typically `http://localhost:5173/`).
+**Key design decisions:**
+
+- **Single WebGL context.** One `<Canvas>` is mounted once in `App.jsx` and never remounted. This avoids browser WebGL context limits and GPU overhead that arise from per-section canvases.
+- **Mutable ref as scroll bridge.** `scrollStateRef` holds a plain object (`createScrollState()`) mutated directly by GSAP tweens. React state is never updated for per-frame scroll values, keeping the render loop outside React's scheduler.
+- **Lenis + GSAP ticker synchronization.** `lenis.raf()` is called inside `gsap.ticker`, not a standalone `requestAnimationFrame`. This ensures Lenis scroll position and GSAP ScrollTrigger evaluate at exactly the same frame.
+- **GSAP scoped to component.** A custom `useGSAP` hook creates a GSAP context scoped to each section's DOM node, ensuring ScrollTrigger cleanup on unmount.
+- **Vendor chunk separation.** Vite `manualChunks` splits the bundle into `three-vendor`, `animation-vendor`, and `react-vendor` chunks for parallel loading.
 
 ---
 
-## Production Build
+## 3D / WebGL System
 
-To build the project for production:
+The `src/3d/` directory contains the entire WebGL scene, composed as discrete R3F components under a single `<Canvas>`:
 
-```bash
-npm run build
+| Component | Responsibility |
+|---|---|
+| `AetherCore.jsx` | Canvas host; manages responsive breakpoints, reduced-motion state, and canvas visibility gating |
+| `AetherCoreController.js` | Defines and exports `createScrollState()` — the shared mutable object that drives all scene parameters |
+| `CoreGeometry.jsx` | Outer translucent sphere + inner icosahedron lattice; responds to `coreScale`, `shellOpacity`, `dissolution` |
+| `OrbitalRings.jsx` | Instanced concentric rings; responds to `ringExpansion` and `ringTilt` |
+| `DustField.jsx` | Instanced ambient particle field; responds to `dustDispersion` |
+| `FragmentField.jsx` | Instanced fragment particles ejecting from the core surface; responds to `fragmentProgress` and `dissolution` |
+| `SceneLighting.jsx` | Ambient, directional, and point lights |
+
+**Scroll state parameters (driven by GSAP, read in `useFrame`):**
+
+```js
+{
+  progress:          0.0,   // Overall scroll progress
+  coreScale:         1.0,   // Scale expansion multiplier
+  ringExpansion:     1.0,   // Orbital ring radius
+  rotationSpeed:     1.0,   // Rotation velocity multiplier
+  emissiveIntensity: 0.25,  // Inner core glow brightness
+  cameraZ:           8.5,   // Camera Z position
+  dustDispersion:    1.0,   // Dust particle spread
+  dissolution:       0.0,   // Overall deconstruction (0 to 1)
+  shellOpacity:      0.75,  // Outer sphere transparency
+  ringTilt:          0.0,   // Ring axis drift
+  fragmentProgress:  0.0,   // Surface fragment ejection
+}
 ```
 
-This compiles optimized, minified bundles into the `dist/` directory.
-
-To preview the production build locally:
-
-```bash
-npm run preview
-```
-
-To run lint checks:
-
-```bash
-npm run lint
-```
+Camera approach is handled inside `useFrame` with a lerp factor of `0.065` (or `1.0` for reduced-motion snap).
 
 ---
 
-## Deployment
+## Interactive Systems
 
-AETHER produces a static single-page application (SPA) output in `dist/`. It can be deployed instantly to any modern hosting platform:
+### Capabilities Diagnostic Console
 
-- **Vercel**: Import the repository with Vite preset; build command `npm run build`, output directory `dist`.
-- **Netlify**: Set build command to `npm run build` and publish directory to `dist`.
-- **Cloudflare Pages / GitHub Pages**: Deploy the static `dist/` folder directly.
+Four capability panels, each containing a canvas-drawn visualizer unique to that capability, animated live metrics, signal color, status code, and bus telemetry readout. A capability-specific sound is synthesized on tab selection. Navigation via WAI-ARIA tab semantics and arrow key handling.
+
+The four capabilities: Quantum Mesh Matrix, Zero-Latency Perception, Autonomous Reasoning, Entanglement Crypto.
+
+### Telemetry
+
+Four node cards (Alpha / Beta / Gamma / Delta) each showing memory usage, latency, coherence, throughput, and an animated spectrum bar array. Spectrum bars jitter at 400ms intervals using `setInterval`, which starts and stops via `IntersectionObserver` (viewport) and `document.visibilityState` (tab focus). Four display mode buttons change the active color accent.
+
+### Target Sectors
+
+Tabbed interface with four sectors: Aerospace & Orbital, Synthetic Biology, Quantum Markets, Climate Simulation. Each tab panel shows a heading, description, three stat items, and a highlight line.
+
+### AETHER Terminal
+
+In-browser CLI simulator with a scrollable output log and a text input form. Recognized commands:
+
+| Command | Output |
+|---|---|
+| `help` | Lists all available commands |
+| `status` | Kernel status readout |
+| `analyze` | Neural array scan result |
+| `quantum-scan` | Orbital relay ping results for four nodes |
+| `synthesize` | Generates a synthetic hypothesis |
+| `version` | Kernel build version |
+| `matrix` | Vector flux stream output |
+| `clear` | Resets terminal log to initial state |
+
+Unrecognized input returns an error line. Preset buttons for `status`, `analyze`, `quantum-scan`, `synthesize`, and `clear` are provided below the terminal window.
+
+### Access Clearance Modal
+
+Triggered by the "Request Access" CTA and the Navbar button. Contains a form (name, organization, email, clearance tier) and a simulated key generation sequence. Implements focus trap, Escape key dismissal, body scroll lock, and Lenis `stop()`/`start()` coordination.
 
 ---
 
 ## Accessibility
 
-AETHER treats accessibility as a first-class requirement:
-- **Keyboard Navigation**: Full tab ordering, visible focus rings, and dedicated ARIA attributes across all interactive components.
-- **ARIA Tabs**: The Capabilities matrix implements standard WAI-ARIA tab semantics (`tablist`, `tab`, `tabpanel`, `aria-selected`, `aria-controls`) with full arrow key navigation support.
-- **Skip Navigation**: High-contrast "Skip to main content" link accessible immediately upon initial tab keypress.
-- **Modal Dialog**: Screen-reader accessible modal with `role="dialog"`, `aria-modal="true"`, focus trap, and Escape key dismissal.
-- **Semantic HTML**: Proper sectioning elements (`<header>`, `<main>`, `<section>`, `<footer>`, `<nav>`) throughout.
-- **Reduced Motion**: Respects `prefers-reduced-motion` settings to tone down high-intensity kinetic animations.
+Implemented as a first-class concern across the build:
+
+- **Skip link** — visually hidden until focused; navigates to `#main-content`
+- **`prefers-reduced-motion`** — checked at component mount in every GSAP timeline and in the R3F `useFrame` lerp factor; animations skip or snap when the preference is active
+- **WAI-ARIA tabs** — Capabilities and Sectors implement `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected`, `aria-controls`, `aria-labelledby`
+- **Keyboard navigation** — Tab panels respond to Arrow Left/Right, Home, End
+- **Terminal input** — labelled with `aria-label="Terminal command input"`
+- **Modal** — `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, focus trap (Tab / Shift+Tab cycle within modal), Escape key closes
+- **Mobile navigation** — drawer open state manages body scroll lock
+- **AetherCore canvas** — `aria-hidden="true"` on the canvas container throughout
+- **Semantic structure** — `<main>`, `<section>`, `<nav>`, `<footer>`, heading hierarchy used throughout
+
+No WCAG certification has been assessed.
 
 ---
 
 ## Performance
 
-- **Unified WebGL Rendering**: Maintains a steady 60 FPS by rendering all 3D geometries in a single scene graph.
-- **Zero Asset Bloat**: Completely free of large raster files or audio assets; all assets are vector SVGs (`favicon.svg`, `og-preview.svg`) or procedurally synthesized.
-- **Resource Hints**: Preconnect headers for Google Fonts (`fonts.googleapis.com` & `fonts.gstatic.com`) for minimal DNS/TCP latency.
-- **Efficient Memory Management**: Event listeners and WebGL geometry/material buffers are systematically cleaned up on unmount.
+Optimizations implemented during the build:
+
+- **Single WebGL context** — one persistent `<Canvas>` avoids browser context limits
+- **DPR cap** — `dpr={[1, 1.5]}` on the R3F Canvas limits pixel ratio on high-density screens
+- **Geometry LOD** — sphere subdivision detail is halved on mobile
+- **Canvas visibility gating** — `frameloop` switches from `'always'` to `'demand'` when the 3D section is far off-screen, pausing the render loop
+- **Telemetry interval gating** — the 400ms spectrum jitter only runs when the section is intersecting and the browser tab is visible
+- **Mutable scroll bridge** — GSAP tweens mutate a plain ref object; no React state updates occur per frame
+- **Vendor chunk splitting** — `three-vendor`, `animation-vendor`, and `react-vendor` chunks allow parallel loading and better long-term caching
+- **No raster image assets** — all visual assets are SVGs or procedurally generated
+- **No external audio files** — all sound is synthesized at runtime via Web Audio API oscillators
+- **Font preloading** — `<link rel="preconnect">` hints for Google Fonts in `index.html`
+- **`prefers-reduced-motion`** — removes animation workload for users who opt out
+
+---
+
+## Responsive Experience
+
+Responsive behavior is implemented across three breakpoints: mobile (≤ 768px), tablet (769–1024px), and desktop (> 1024px).
+
+- The 3D scene scales down progressively (`0.62` / `0.88` / `1.12` multiplier)
+- Hero scroll end-states (camera Z, core scale, ring expansion) use reduced values on mobile
+- The Navbar collapses to a full-screen mobile drawer
+- All sections reflow their grid and typography via CSS media queries
 
 ---
 
@@ -161,42 +294,145 @@ AETHER treats accessibility as a first-class requirement:
 ```
 AETHER/
 ├── public/
-│   ├── favicon.svg          # Vector icon for browser tabs
-│   └── og-preview.svg       # 1200×630 Open Graph social preview card
+│   ├── favicon.svg              # SVG favicon
+│   └── og-preview.svg           # 1200x630 Open Graph social card
 ├── src/
-│   ├── 3d/                  # Three.js / React Three Fiber components
-│   │   ├── AetherCore.jsx           # Main persistent 3D canvas
-│   │   ├── AetherCoreController.js  # Mutable scroll state & camera logic
-│   │   ├── CoreGeometry.jsx         # Central neural core sphere
-│   │   ├── DustField.jsx            # Deep stellar dust particles
-│   │   ├── FragmentField.jsx        # Floating quantum fragments
-│   │   ├── OrbitalRings.jsx         # Kinetic gyroscopic rings
-│   │   └── SceneLighting.jsx        # Dynamic 3-point scene illumination
-│   ├── animations/          # GSAP timeline helpers & plugins
+│   ├── 3d/
+│   │   ├── AetherCore.jsx       # Canvas host, visibility gating, responsive state
+│   │   ├── AetherCoreController.js  # Shared scroll state factory
+│   │   ├── CoreGeometry.jsx     # Outer sphere + icosahedron lattice
+│   │   ├── DustField.jsx        # Instanced ambient particle field
+│   │   ├── FragmentField.jsx    # Instanced fragment ejection particles
+│   │   ├── OrbitalRings.jsx     # Instanced concentric rings
+│   │   └── SceneLighting.jsx    # Scene lighting setup
+│   ├── animations/
+│   │   └── gsap.js              # GSAP + ScrollTrigger registration, global defaults
 │   ├── components/
-│   │   ├── layout/          # Layout wrappers (PageContainer, SmoothScroll)
-│   │   └── ui/              # Reusable UI (Navbar, Button, Loader, Modal, Footer)
-│   ├── hooks/               # Custom hooks (useGSAP, useLenis)
-│   ├── sections/            # Feature sections
-│   │   ├── Hero.jsx                 # Opening statement & 3D focal
-│   │   ├── Intro.jsx                # Narrative philosophy & kinetic typography
-│   │   ├── Capabilities.jsx         # Accessible ARIA tabbed intelligence matrix
-│   │   ├── Telemetry.jsx            # Quantum telemetry live telemetry gauges
-│   │   ├── Sectors.jsx              # Mission-critical deployment matrix
-│   │   ├── Terminal.jsx             # Interactive neural CLI diagnostic console
-│   │   └── CallToAction.jsx         # Access clearance request section
-│   ├── utils/               # Procedural audio generator & global constants
-│   ├── App.jsx              # Application root orchestrator
-│   ├── index.css            # Design token system, typography, & global reset
-│   └── main.jsx             # React DOM entry point
-├── index.html               # Semantic HTML shell, SEO & Open Graph meta
-├── package.json             # Scripts & dependencies
-├── vite.config.js           # Vite build configuration
-└── README.md                # Project documentation
+│   │   ├── layout/
+│   │   │   ├── PageContainer.jsx
+│   │   │   └── SmoothScroll.jsx # Lenis context provider
+│   │   └── ui/
+│   │       ├── AccessModal.jsx  # Focus-trapped clearance modal
+│   │       ├── Button.jsx
+│   │       ├── Footer.jsx       # UTC clock, sound toggle, dispatch input
+│   │       ├── Loader.jsx       # Cinematic intro screen
+│   │       └── Navbar.jsx       # Fixed header + mobile drawer
+│   ├── hooks/
+│   │   ├── useGSAP.js           # Scoped GSAP context hook
+│   │   └── useLenis.js          # Lenis init + GSAP ticker sync
+│   ├── sections/
+│   │   ├── CallToAction.jsx
+│   │   ├── Capabilities.jsx     # ARIA tabs + canvas visualizers
+│   │   ├── Hero.jsx             # Cinematic 4-state scroll sequence
+│   │   ├── Intro.jsx            # Information field / narrative
+│   │   ├── Sectors.jsx          # ARIA tabs + deployment contexts
+│   │   ├── Telemetry.jsx        # Node readout + visibility-gated jitter
+│   │   └── Terminal.jsx         # In-browser CLI simulator
+│   ├── utils/
+│   │   ├── constants.js         # Nav links, section IDs, breakpoints
+│   │   └── sound.js             # Procedural Web Audio API synthesizer
+│   ├── App.jsx                  # Root composition
+│   ├── index.css                # Design token system, global reset
+│   └── main.jsx                 # React DOM entry point
+├── index.html                   # HTML shell, SEO meta, OG tags, font preload
+├── vite.config.js               # Vite config + manual chunk splitting
+└── package.json
 ```
 
 ---
 
-## License
+## Getting Started
 
-This project is open-source and available under the [MIT License](LICENSE).
+Requires Node.js 18 or later.
+
+```bash
+# Clone
+git clone https://github.com/ubaidullahzafar789-cyber/aether-interactive.git
+cd aether-interactive
+
+# Install dependencies
+npm install
+
+# Start development server (http://localhost:5173)
+npm run dev
+```
+
+---
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start Vite development server with HMR |
+| `npm run build` | Build production bundle to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint across the project |
+
+---
+
+## Production Build
+
+```bash
+npm run build
+```
+
+Output is written to `dist/`. The build applies minification, tree-shaking, and the manual chunk strategy defined in `vite.config.js` (three-vendor, animation-vendor, react-vendor). The `dist/` folder is a self-contained static SPA ready for deployment to any CDN or static host.
+
+---
+
+## Deployment
+
+AETHER is deployed on Vercel.
+
+**Live URL:** https://aether-interactive-9oyesd8gr-study-mate-ai-team.vercel.app
+
+To deploy your own instance: import the repository into Vercel, set the framework preset to Vite, build command to `npm run build`, and output directory to `dist`. No environment variables are required.
+
+---
+
+## Design Direction
+
+The visual language is built on restraint and information density:
+
+- Deep near-black backgrounds with no competing gradients in the main viewport
+- A cool blue-steel accent palette derived from the 3D scene's lighting
+- Two typefaces: Syne (display headings) and Inter (body and UI), loaded from Google Fonts
+- Monospaced elements for telemetry readouts, terminal output, and index labels
+- WebGL provides atmosphere; the interface elements provide clarity
+- Sections reveal progressively as they enter the viewport
+- Interaction-driven storytelling: hovering, scrolling, clicking, and typing all alter the state of the experience
+
+---
+
+## Engineering Notes
+
+**Lenis + GSAP coordination.** Lenis runs its RAF inside `gsap.ticker` with `lagSmoothing(0)`. This is the only reliable way to synchronize Lenis position with GSAP ScrollTrigger — running them on separate RAF loops causes one-frame drift that produces scroll jitter. Lenis also calls `lenis.resize()` whenever ScrollTrigger fires a `refresh` event, keeping pinned spacer heights accurate.
+
+**React architecture.** The app is a flat component tree with no global state management library. The only cross-component coordination is `scrollStateRef` (a ref passed from App to Hero and Intro, then into AetherCore) and the Lenis context (a ref provided by `SmoothScroll` and consumed via `useLenisContext`). GSAP contexts are scoped per component via the `useGSAP` hook, which cleans up on unmount.
+
+**WebGL performance.** The single-canvas approach avoids browser WebGL context limits. Canvas visibility is tracked with an `IntersectionObserver` so the render loop pauses when the 3D section is far off-screen. DPR is capped, and geometry subdivision is halved on mobile.
+
+**Accessibility.** Reduced-motion support is not a single global flag — it is checked independently in each GSAP callback and in the R3F `useFrame` lerp factor. This means the site degrades gracefully at the granularity of individual animated elements.
+
+**Responsive behavior.** Breakpoints are defined once in `src/utils/constants.js` and used consistently in JavaScript logic. CSS media queries handle layout; JavaScript handles scene scale and scroll target values.
+
+---
+
+## Project Status
+
+AETHER is a completed portfolio project. Phases 1 through 10 are implemented, committed, and deployed. It is not a production SaaS product.
+
+---
+
+## Repository
+
+**GitHub:** https://github.com/ubaidullahzafar789-cyber/aether-interactive
+
+---
+
+## Links
+
+| | |
+|---|---|
+| Live Demo | https://aether-interactive-9oyesd8gr-study-mate-ai-team.vercel.app |
+| GitHub | https://github.com/ubaidullahzafar789-cyber/aether-interactive |
