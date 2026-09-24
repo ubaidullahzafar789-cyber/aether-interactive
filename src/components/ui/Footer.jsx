@@ -121,6 +121,7 @@ export default function Footer() {
               <form className="footer__dispatch-form" onSubmit={handleSubscribe}>
                 <input
                   type="email"
+                  aria-label="Email address for dispatch updates"
                   required
                   placeholder="enter email..."
                   value={email}

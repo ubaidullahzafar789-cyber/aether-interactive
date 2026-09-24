@@ -4,7 +4,7 @@
    Features interactive mode toggles and live animated gauges.
    ============================================================= */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { sound } from '../utils/sound'
 import { useGSAP } from '../hooks/useGSAP'
 import './Telemetry.css'
@@ -66,12 +66,16 @@ const INITIAL_NODES = [
 export default function Telemetry() {
   const [activeMode, setActiveMode] = useState('quantum')
   const [nodes, setNodes] = useState(INITIAL_NODES)
+  const sectionRef = useRef(null)
 
   const currentMode = MODES.find((m) => m.id === activeMode) || MODES[0]
 
-  /* Micro live spectrum jitter simulation */
+  /* Micro live spectrum jitter simulation — gated by viewport visibility & tab focus */
   useEffect(() => {
-    const interval = setInterval(() => {
+    let intervalId = null
+    let isIntersecting = false
+
+    const updateJitter = () => {
       setNodes((prevNodes) =>
         prevNodes.map((node) => ({
           ...node,
@@ -81,9 +85,52 @@ export default function Telemetry() {
           }),
         }))
       )
-    }, 400)
+    }
 
-    return () => clearInterval(interval)
+    const startInterval = () => {
+      if (!intervalId && isIntersecting && !document.hidden) {
+        intervalId = setInterval(updateJitter, 400)
+      }
+    }
+
+    const stopInterval = () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+        intervalId = null
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopInterval()
+      } else {
+        startInterval()
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting
+        if (isIntersecting) {
+          startInterval()
+        } else {
+          stopInterval()
+        }
+      },
+      { threshold: 0.05 }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      stopInterval()
+      observer.disconnect()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [])
 
   const handleModeChange = (modeId) => {
@@ -138,7 +185,10 @@ export default function Telemetry() {
 
   return (
     <section
-      ref={telemetryRef}
+      ref={(el) => {
+        sectionRef.current = el
+        telemetryRef.current = el
+      }}
       id="telemetry"
       className="telemetry"
       aria-labelledby="telemetry-heading"

@@ -54,7 +54,7 @@ AETHER is designed as an interactive art piece and technical showcase:
 ## Technology Stack
 
 - **Core Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **3D Graphics & WebGL**: [Three.js](https://threejs.org/), [@react-three/fiber](https://r3f.docs.pmnd.rs/), [@react-three/drei](https://github.com/pmndrs/drei)
+- **3D Graphics & WebGL**: [Three.js](https://threejs.org/), [@react-three/fiber](https://r3f.docs.pmnd.rs/)
 - **Animation & Motion**: [GSAP 3](https://gsap.com/) (ScrollTrigger, Timeline)
 - **Smooth Scroll**: [Lenis](https://lenis.darkroom.engineering/)
 - **Audio Engine**: Native Browser [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
@@ -150,7 +150,7 @@ AETHER treats accessibility as a first-class requirement:
 ## Performance
 
 - **Unified WebGL Rendering**: Maintains a steady 60 FPS by rendering all 3D geometries in a single scene graph.
-- **Zero Asset Bloat**: Completely free of large raster files or audio assets; all assets are vector SVGs (`icons.svg`, `favicon.svg`, `og-preview.svg`) or procedurally synthesized.
+- **Zero Asset Bloat**: Completely free of large raster files or audio assets; all assets are vector SVGs (`favicon.svg`, `og-preview.svg`) or procedurally synthesized.
 - **Resource Hints**: Preconnect headers for Google Fonts (`fonts.googleapis.com` & `fonts.gstatic.com`) for minimal DNS/TCP latency.
 - **Efficient Memory Management**: Event listeners and WebGL geometry/material buffers are systematically cleaned up on unmount.
 
@@ -162,7 +162,6 @@ AETHER treats accessibility as a first-class requirement:
 AETHER/
 ├── public/
 │   ├── favicon.svg          # Vector icon for browser tabs
-│   ├── icons.svg            # Centralized SVG sprite system
 │   └── og-preview.svg       # 1200×630 Open Graph social preview card
 ├── src/
 │   ├── 3d/                  # Three.js / React Three Fiber components

@@ -3,7 +3,7 @@
    Interactive tabbed showcase of real-world industry deployments.
    ============================================================= */
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { sound } from '../utils/sound'
 import { useGSAP } from '../hooks/useGSAP'
 import './Sectors.css'
@@ -69,12 +69,36 @@ const SECTORS = [
 
 export default function Sectors() {
   const [activeTab, setActiveTab] = useState(0)
+  const tabButtonsRef = useRef([])
 
   const currentSector = SECTORS[activeTab]
 
   const handleTabChange = (index) => {
     sound.playClick()
     setActiveTab(index)
+  }
+
+  // WAI-ARIA Keyboard navigation between sector tabs
+  const handleKeyDown = (e, index) => {
+    let nextIndex = index
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault()
+      nextIndex = (index + 1) % SECTORS.length
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      nextIndex = (index - 1 + SECTORS.length) % SECTORS.length
+    } else if (e.key === 'Home') {
+      e.preventDefault()
+      nextIndex = 0
+    } else if (e.key === 'End') {
+      e.preventDefault()
+      nextIndex = SECTORS.length - 1
+    }
+
+    if (nextIndex !== index) {
+      handleTabChange(nextIndex)
+      tabButtonsRef.current[nextIndex]?.focus()
+    }
   }
 
   /* ── GSAP Scroll-Reveal Choreography ── */
@@ -147,11 +171,16 @@ export default function Sectors() {
             return (
               <button
                 key={sector.id}
+                ref={(el) => (tabButtonsRef.current[index] = el)}
+                id={`sector-tab-${sector.id}`}
                 role="tab"
                 aria-selected={isActive}
+                aria-controls={`sector-panel-${sector.id}`}
+                tabIndex={isActive ? 0 : -1}
                 className={['sectors__tab-btn', isActive ? 'sectors__tab-btn--active' : ''].join(' ')}
                 onClick={() => handleTabChange(index)}
                 onMouseEnter={() => sound.playHover()}
+                onKeyDown={(e) => handleKeyDown(e, index)}
               >
                 <span className="sectors__tab-num">{sector.num}</span>
                 <span className="sectors__tab-name">{sector.name}</span>
@@ -161,7 +190,13 @@ export default function Sectors() {
         </div>
 
         {/* Active Content Showcase Box */}
-        <div className="sectors__showcase">
+        <div
+          id={`sector-panel-${currentSector.id}`}
+          role="tabpanel"
+          aria-labelledby={`sector-tab-${currentSector.id}`}
+          tabIndex={0}
+          className="sectors__showcase"
+        >
 
           <div className="sectors__showcase-main">
             <div className="sectors__showcase-badge">

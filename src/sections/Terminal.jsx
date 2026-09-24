@@ -19,12 +19,14 @@ export default function Terminal() {
   const [inputVal, setInputVal] = useState('')
   const [logs, setLogs] = useState(INITIAL_LOGS)
   const [isProcessing, setIsProcessing] = useState(false)
-  const logEndRef = useRef(null)
+  const terminalBodyRef = useRef(null)
   const inputRef = useRef(null)
 
-  /* Auto-scroll to bottom of logs */
+  /* Auto-scroll only the internal terminal body container to bottom */
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight
+    }
   }, [logs, isProcessing])
 
   const executeCommand = (cmdStr) => {
@@ -39,6 +41,7 @@ export default function Terminal() {
     setInputVal('')
 
     setIsProcessing(true)
+    inputRef.current?.focus()
 
     setTimeout(() => {
       let outputLogs = []
@@ -212,7 +215,11 @@ export default function Terminal() {
           </div>
 
           {/* Log Stream */}
-          <div className="terminal__body" onClick={() => inputRef.current?.focus()}>
+          <div
+            ref={terminalBodyRef}
+            className="terminal__body"
+            onClick={() => inputRef.current?.focus()}
+          >
             {logs.map((log, index) => (
               <div
                 key={index}
@@ -232,8 +239,6 @@ export default function Terminal() {
                 [SYNTHESIZING THOUGHT VECTOR...]
               </div>
             )}
-
-            <div ref={logEndRef} />
           </div>
 
           {/* Input Form */}
@@ -242,6 +247,7 @@ export default function Terminal() {
             <input
               ref={inputRef}
               type="text"
+              aria-label="Terminal command input"
               className="terminal__input"
               value={inputVal}
               onChange={handleInputChange}
@@ -264,7 +270,10 @@ export default function Terminal() {
               <button
                 key={cmd}
                 className="terminal__preset-btn"
-                onClick={() => executeCommand(cmd)}
+                onClick={() => {
+                  executeCommand(cmd)
+                  inputRef.current?.focus()
+                }}
                 onMouseEnter={() => sound.playHover()}
               >
                 [{cmd.toUpperCase()}]
